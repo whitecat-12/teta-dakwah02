@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surah Al-Fatihah - Teta Dakwa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Baloo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #38b2ac;
+            --secondary: #0e7490;
+            --accent: #f59e0b;
+            --quran: #10b981;
+            --fiqh: #3b82f6;
+            --hadith: #8b5cf6;
+            --islamic: #ec4899;
+        }
+        
+        body {
+            font-family: 'Baloo 2', cursive;
+            background-color: #f8fafc;
+        }
+        
+        .app-container {
+            max-width: 414px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 414px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            background: white;
+            z-index: 10;
+        }
+        
+        .nav-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .nav-icon.active {
+            transform: translateY(-10px);
+            color: var(--primary);
+        }
+        
+        .arabic-text {
+            font-family: 'Amiri', serif;
+            font-size: 1.8rem;
+            line-height: 2.5rem;
+            text-align: right;
+            direction: rtl;
+        }
+        
+        .verse-container {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-right: 4px solid var(--quran);
+            transition: all 0.3s ease;
+        }
+        
+        .verse-container:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .verse-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background-color: var(--quran);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+        
+        .verse-translation {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px dashed #e5e7eb;
+            line-height: 1.6;
+        }
+        
+        .surah-header {
+            background: linear-gradient(135deg, #38b2ac, #0e7490);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .surah-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .surah-meta {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.9rem;
+            opacity: 0.9;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .surah-meta i {
+            margin-right: 0.3rem;
+        }
+        
+        .bismillah {
+            font-family: 'Amiri', serif;
+            font-size: 2rem;
+            text-align: center;
+            margin: 1.5rem 0;
+            color: var(--secondary);
+        }
+        
+        .tafsir-btn {
+            background-color: var(--quran);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .tafsir-btn:hover {
+            background-color: #0e7490;
+        }
+        
+        .tafsir-btn i {
+            margin-right: 0.5rem;
+        }
+        
+        .tafsir-content {
+            display: none;
+            background-color: #f0fdfa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            border-left: 4px solid var(--quran);
+        }
+        
+        .active-tafsir {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .back-button i {
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile App Container -->
+    <div class="app-container">
+        <!-- App Header -->
+        <header class="bg-gradient-to-r from-primary to-secondary p-4 text-white">
+            <div class="flex justify-between items-center">
+                <div class="app-logo">
+                    <div class="app-logo-icon">
+                        <i class="fas fa-mosque"></i>
+                    </div>
+                    <h1 class="app-name">TETA DAKWA</h1>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-bell"></i>
+                    <i class="fas fa-user-circle text-xl"></i>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Surah Content -->
+        <main class="pb-20">
+            <div class="surah-header">
+                <a href="javascript:history.back()" class="back-button">
+                    <i class="fas fa-arrow-left"></i> Kembali
+                </a>
+                <h1 class="surah-title">Surah Al-Fatihah</h1>
+                <div class="surah-meta">
+                    <span><i class="fas fa-book-open"></i> 7 Ayat</span>
+                    <span><i class="fas fa-map-marker-alt"></i> Makkiyah</span>
+                    <span><i class="fas fa-quran"></i> Juz 1</span>
+                </div>
+            </div>
+            
+            <div class="px-4">
+                <!-- Basmalah -->
+                <div class="bismillah">
+                    بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
+                </div>
+                
+                <!-- Verse 1 -->
+                <div class="verse-container">
+                    <div>
+                        <span class="verse-number">1</span>
+                        <span class="arabic-text">الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ</span>
+                    </div>
+                    <div class="verse-translation">
+                        <p><strong>Terjemahan:</strong> Segala puji bagi Allah, Tuhan seluruh alam.</p>
+                        <button class="tafsir-btn" onclick="toggleTafsir(1)">
+                            <i class="fas fa-book"></i> Tafsir
+                        </button>
+                        <div class="tafsir-content" id="tafsir1">
+                            <p><strong>Tafsir Ibnu Katsir:</strong> Alhamdulillah adalah pujian kepada Allah atas sifat-sifat-Nya yang sempurna dan perbuatan-perbuatan-Nya yang baik. "Rabbil 'alamin" artinya Allah adalah Pencipta, Pemilik, Pengatur seluruh alam semesta.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Verse 2 -->
+                <div class="verse-container">
+                    <div>
+                        <span class="verse-number">2</span>
+                        <span class="arabic-text">الرَّحْمَٰنِ الرَّحِيمِ</span>
+                    </div>
+                    <div class="verse-translation">
+                        <p><strong>Terjemahan:</strong> Yang Maha Pengasih, Maha Penyayang.</p>
+                        <button class="tafsir-btn" onclick="toggleTafsir(2)">
+                            <i class="fas fa-book"></i> Tafsir
+                        </button>
+                        <div class="tafsir-content" id="tafsir2">
+                            <p><strong>Tafsir Ibnu Katsir:</strong> Ar-Rahman dan Ar-Rahim adalah dua nama Allah yang menunjukkan kasih sayang-Nya yang luas. Ar-Rahman menunjukkan kasih sayang Allah yang mencakup semua makhluk di dunia, sedangkan Ar-Rahim khusus untuk orang-orang beriman di akhirat.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Verse 3 -->
+                <div class="verse-container">
+                    <div>
+                        <span class="verse-number">3</span>
+                        <span class="arabic-text">مَالِكِ يَوْمِ الدِّينِ</span>
+                    </div>
+                    <div class="verse-translation">
+                        <p><strong>Terjemahan:</strong> Pemilik hari pembalasan.</p>
+                        <button class="tafsir-btn" onclick="toggleTafsir(3)">
+                            <i class="fas fa-book"></i> Tafsir
+                        </button>
+                        <div class="tafsir-content" id="tafsir3">
+                            <p><strong>Tafsir Ibnu Katsir:</strong> Allah adalah satu-satunya Penguasa pada hari Kiamat, dimana semua manusia akan dimintai pertanggungjawaban atas perbuatan mereka. Tidak ada yang bisa memberikan syafaat kecuali dengan izin-Nya.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Verse 4 -->
+                <div class="verse-container">
+                    <div>
+                        <span class="verse-number">4</span>
+                        <span class="arabic-text">إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ</span>
+                    </div>
+                    <div class="verse-translation">
+                        <p><strong>Terjemahan:</strong> Hanya kepada Engkaulah kami menyembah dan hanya kepada Engkaulah kami memohon pertolongan.</p>
+                        <button class="tafsir-btn" onclick="toggleTafsir(4)">
+                            <i class="fas fa-book"></i> Tafsir
+                        </button>
+                        <div class="tafsir-content" id="tafsir4">
+                            <p><strong>Tafsir Ibnu Katsir:</strong> Ayat ini mengandung tauhid uluhiyah, bahwa hanya Allah yang berhak disembah dan dimintai pertolongan. Ini adalah inti dari ajaran Islam yang membedakan seorang muslim dari orang musyrik.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Verse 5 -->
+                <div class="verse-container">
+                    <div>
+                        <span class="verse-number">5</span>
+                        <span class="arabic-text">اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ</span>
+                    </div>
+                    <div class="verse-translation">
+                        <p><strong>Terjemahan:</strong> Tunjukilah kami jalan yang lurus.</p>
+                        <button class="tafsir-btn" onclick="toggleTafsir(5)">
+                            <i class="fas fa-book"></i> Tafsir
+                        </button>
+                        <div class="tafsir-content" id="tafsir5">
+                            <p><strong>Tafsir Ibnu Katsir:</strong> Permohonan agar Allah memberikan hidayah kepada jalan yang lurus, yaitu Islam yang berdasarkan Al-Quran dan Sunnah. Ini menunjukkan bahwa hidayah mutlak berada di tangan Allah.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Verse 6 -->
+                <div class="verse-container">
+                    <div>
+                        <span class="verse-number">6</span>
+                        <span class="arabic-text">صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ</span>
+                    </div>
+                    <div class="verse-translation">
+                        <p><strong>Terjemahan:</strong> (Yaitu) jalan orang-orang yang telah Engkau beri nikmat.</p>
+                        <button class="tafsir-btn" onclick="toggleTafsir(6)">
+                            <i class="fas fa-book"></i> Tafsir
+                        </button>
+                        <div class="tafsir-content" id="tafsir6">
+                            <p><strong>Tafsir Ibnu Katsir:</strong> Yang dimaksud adalah jalan para nabi, shiddiqin, syuhada, dan shalihin. Mereka adalah orang-orang yang telah mendapat nikmat iman dan amal shalih.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Verse 7 -->
+                <div class="verse-container">
+                    <div>
+                        <span class="verse-number">7</span>
+                        <span class="arabic-text">غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ</span>
+                    </div>
+                    <div class="verse-translation">
+                        <p><strong>Terjemahan:</strong> Bukan (jalan) mereka yang dimurkai dan bukan (pula jalan) mereka yang sesat.</p>
+                        <button class="tafsir-btn" onclick="toggleTafsir(7)">
+                            <i class="fas fa-book"></i> Tafsir
+                        </button>
+                        <div class="tafsir-content" id="tafsir7">
+                            <p><strong>Tafsir Ibnu Katsir:</strong> "Yang dimurkai" adalah orang Yahudi yang mengetahui kebenaran tetapi tidak mengamalkannya. "Yang sesat" adalah orang Nasrani yang beribadah tanpa ilmu. Kita memohon perlindungan dari kedua jalan ini.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Additional Features -->
+                <div class="flex justify-start mt-6 mb-10">
+                    <button class="tafsir-btn" onclick="toggleAllTafsir()">
+                        <i class="fas fa-book-open"></i> Buka Semua Tafsir
+                    </button>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav bg-white p-2 flex justify-around items-center">
+            <a href="index2.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-home nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Beranda</span>
+            </a>
+            <a href="video.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-video nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Video</span>
+            </a>
+            <a href="kategori materi.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-quran nav-icon text-xl active"></i>
+                <span class="text-xs mt-1">Materi Harian</span>
+            </a>
+            <a href="kategori soal.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-book-open nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Soal Harian</span>
+            </a>
+            <a href="profil.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-user nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Profil</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        // Toggle tafsir for individual verses
+        function toggleTafsir(verseNumber) {
+            const tafsir = document.getElementById(`tafsir${verseNumber}`);
+            tafsir.classList.toggle('active-tafsir');
+        }
+        
+        // Toggle all tafsir
+        function toggleAllTafsir() {
+            const allTafsir = document.querySelectorAll('.tafsir-content');
+            const isAnyOpen = Array.from(allTafsir).some(t => t.classList.contains('active-tafsir'));
+            
+            allTafsir.forEach(tafsir => {
+                if (isAnyOpen) {
+                    tafsir.classList.remove('active-tafsir');
+                } else {
+                    tafsir.classList.add('active-tafsir');
+                }
+            });
+        }
+        
+        // Set current page as active in bottom nav
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('.bottom-nav a[href="kategori materi.html"] i').classList.add('active');
+            document.querySelector('.bottom-nav a[href="kategori materi.html"]').classList.add('text-primary');
+            document.querySelector('.bottom-nav a[href="kategori materi.html"]').classList.remove('text-gray-500');
+        });
+    </script>
+</body>
+</html>

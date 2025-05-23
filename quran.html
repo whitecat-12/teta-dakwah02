@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teta Dakwa - Mengenal Al-Qur'an</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Baloo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #38b2ac;
+            --secondary: #0e7490;
+            --accent: #f59e0b;
+            --quran: #10b981;
+            --fiqh: #3b82f6;
+            --hadith: #8b5cf6;
+            --islamic: #ec4899;
+        }
+        
+        body {
+            font-family: 'Baloo 2', cursive;
+            background-color: #f8fafc;
+        }
+        
+        .arabic {
+            font-family: 'Amiri', serif;
+            font-size: 1.5rem;
+            line-height: 2.5rem;
+            text-align: right;
+            direction: rtl;
+        }
+        
+        .app-container {
+            max-width: 414px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 414px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            background: white;
+            z-index: 10;
+        }
+        
+        .nav-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .nav-icon.active {
+            transform: translateY(-10px);
+            color: var(--primary);
+        }
+        
+        .article-header {
+            background: linear-gradient(135deg, #10b981, #047857);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .article-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .article-meta {
+            display: flex;
+            align-items: center;
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+        
+        .article-meta i {
+            margin-right: 0.3rem;
+        }
+        
+        .article-meta span {
+            margin-right: 1rem;
+        }
+        
+        .article-content {
+            padding: 0 1rem 5rem;
+        }
+        
+        .article-section {
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #047857;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 0.5rem;
+        }
+        
+        .article-text {
+            line-height: 1.6;
+            text-align: justify;
+            margin-bottom: 1rem;
+        }
+        
+        .highlight-box {
+            background-color: #d1fae5;
+            border-left: 4px solid #047857;
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+        }
+        
+        .ayah-box {
+            background-color: #f0fdf4;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border: 1px solid #bbf7d0;
+        }
+        
+        .ayah-number {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            background-color: #047857;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 25px;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .back-button i {
+            margin-right: 0.5rem;
+        }
+        
+        .surah-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 4px solid #10b981;
+            transition: all 0.3s ease;
+        }
+        
+        .surah-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .surah-number {
+            background-color: #10b981;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .app-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .app-logo-icon {
+            background: linear-gradient(135deg, #38b2ac, #0e7490);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+        }
+        
+        .app-name {
+            font-weight: 700;
+            font-size: 1.25rem;
+            background: linear-gradient(135deg, #38b2ac, #0e7490);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-button.active {
+            background-color: #10b981;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile App Container -->
+    <div class="app-container">
+        <!-- App Header -->
+        <header class="bg-gradient-to-r from-primary to-secondary p-4 text-white">
+            <div class="flex justify-between items-center">
+                <div class="app-logo">
+                    <div class="app-logo-icon">
+                        <i class="fas fa-mosque"></i>
+                    </div>
+                    <h1 class="app-name">TETA DAKWA</h1>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-bell"></i>
+                    <i class="fas fa-user-circle text-xl"></i>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Article Content -->
+        <main class="pb-20">
+            <div class="article-header">
+                <a href="javascript:history.back()" class="back-button">
+                    <i class="fas fa-arrow-left"></i> Kembali
+                </a>
+                <h1 class="article-title">Mengenal Al-Qur'an: Kitab Suci Umat Islam</h1>
+                <div class="article-meta">
+                    <span><i class="fas fa-book-open"></i> Al-Qur'an</span>
+                    <span><i class="fas fa-clock"></i> 12 min baca</span>
+                    <span><i class="fas fa-calendar"></i> 15 Juni 2024</span>
+                </div>
+            </div>
+            
+            <div class="article-content">
+                <!-- Tab Navigation -->
+                <div class="flex overflow-x-auto gap-2 mb-4 pb-2">
+                    <button class="tab-button active" data-tab="pengantar">Pengantar</button>
+                    <button class="tab-button" data-tab="sejarah">Sejarah</button>
+                    <button class="tab-button" data-tab="kandungan">Kandungan</button>
+                    <button class="tab-button" data-tab="keutamaan">Keutamaan</button>
+                </div>
+                
+                <!-- Tab Contents -->
+                <div id="pengantar" class="tab-content active">
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-info-circle"></i> Apa Itu Al-Qur'an?</h2>
+                        <p class="article-text">
+                            Al-Qur'an adalah kitab suci umat Islam yang diwahyukan oleh Allah SWT kepada Nabi Muhammad SAW melalui Malaikat Jibril secara berangsur-angsur selama 23 tahun. Al-Qur'an merupakan mukjizat terbesar Nabi Muhammad dan pedoman hidup bagi seluruh umat manusia.
+                        </p>
+                        
+                        <div class="ayah-box">
+                            <p class="arabic">﴿إِنَّا نَحْنُ نَزَّلْنَا ٱلذِّكْرَ وَإِنَّا لَهُۥ لَحَـٰفِظُونَ﴾</p>
+                            <p class="mt-2">"Sesungguhnya Kami-lah yang menurunkan Al-Qur'an, dan sesungguhnya Kami benar-benar memeliharanya." (QS. Al-Hijr: 9)</p>
+                            <span class="ayah-number">9</span>
+                        </div>
+                    </div>
+                    
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-star"></i> Fakta Dasar Al-Qur'an</h2>
+                        <div class="grid grid-cols-2 gap-3 mt-3">
+                            <div class="bg-green-50 p-3 rounded-lg">
+                                <h3 class="font-bold text-green-800">Jumlah Surah</h3>
+                                <p>114 Surah</p>
+                            </div>
+                            <div class="bg-blue-50 p-3 rounded-lg">
+                                <h3 class="font-bold text-blue-800">Jumlah Ayat</h3>
+                                <p>6.236 Ayat</p>
+                            </div>
+                            <div class="bg-purple-50 p-3 rounded-lg">
+                                <h3 class="font-bold text-purple-800">Jumlah Juz</h3>
+                                <p>30 Juz</p>
+                            </div>
+                            <div class="bg-yellow-50 p-3 rounded-lg">
+                                <h3 class="font-bold text-yellow-800">Masa Turun</h3>
+                                <p>23 Tahun</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-book"></i> Surah Populer</h2>
+                        
+                        <div class="surah-card">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center">
+                                    <div class="surah-number">1</div>
+                                    <h3 class="font-bold ml-2">Al-Fatihah</h3>
+                                </div>
+                                <span class="text-sm text-gray-500">7 Ayat</span>
+                            </div>
+                            <p class="text-sm text-gray-600">Ummul Qur'an (Induk Al-Qur'an), dibaca dalam setiap rakaat shalat.</p>
+                        </div>
+                        
+                        <div class="surah-card">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center">
+                                    <div class="surah-number">2</div>
+                                    <h3 class="font-bold ml-2">Al-Baqarah</h3>
+                                </div>
+                                <span class="text-sm text-gray-500">286 Ayat</span>
+                            </div>
+                            <p class="text-sm text-gray-600">Surah terpanjang dalam Al-Qur'an, mengandung ayat kursi (2:255).</p>
+                        </div>
+                        
+                        <div class="surah-card">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center">
+                                    <div class="surah-number">36</div>
+                                    <h3 class="font-bold ml-2">Yasin</h3>
+                                </div>
+                                <span class="text-sm text-gray-500">83 Ayat</span>
+                            </div>
+                            <p class="text-sm text-gray-600">Disebut sebagai "Jantung Al-Qur'an", sering dibaca pada malam Jumat.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="sejarah" class="tab-content">
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-history"></i> Turunnya Al-Qur'an</h2>
+                        <p class="article-text">
+                            Al-Qur'an pertama kali diturunkan pada malam Lailatul Qadar di bulan Ramadhan, ketika Nabi Muhammad SAW sedang berkhalwat di Gua Hira. Wahyu pertama yang turun adalah 5 ayat pertama Surah Al-'Alaq.
+                        </p>
+                        
+                        <div class="ayah-box">
+                            <p class="arabic">﴿ٱقْرَأْ بِٱسْمِ رَبِّكَ ٱلَّذِى خَلَقَ ﴿١﴾ خَلَقَ ٱلْإِنسَـٰنَ مِنْ عَلَقٍ ﴿٢﴾ ٱقْرَأْ وَرَبُّكَ ٱلْأَكْرَمُ ﴿٣﴾ ٱلَّذِى عَلَّمَ بِٱلْقَلَمِ ﴿٤﴾ عَلَّمَ ٱلْإِنسَـٰنَ مَا لَمْ يَعْلَمْ ﴿٥﴾﴾</p>
+                            <p class="mt-2">"Bacalah dengan (menyebut) nama Tuhanmu yang menciptakan. (1) Dia telah menciptakan manusia dari segumpal darah. (2) Bacalah, dan Tuhanmulah Yang Maha Mulia. (3) Yang mengajar (manusia) dengan pena. (4) Dia mengajarkan manusia apa yang tidak diketahuinya. (5)" (QS. Al-'Alaq: 1-5)</p>
+                            <span class="ayah-number">1-5</span>
+                        </div>
+                    </div>
+                    
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-scroll"></i> Kodifikasi Al-Qur'an</h2>
+                        <p class="article-text">
+                            Proses pengumpulan Al-Qur'an terjadi dalam tiga tahap utama:
+                        </p>
+                        
+                        <div class="bg-gray-50 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-gray-800">1. Masa Nabi Muhammad SAW</h3>
+                            <p class="text-sm mt-1">Ayat-ayat dihafal oleh para sahabat dan ditulis di berbagai media seperti pelepah kurma, kulit binatang, dan batu.</p>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-gray-800">2. Masa Khalifah Abu Bakar</h3>
+                            <p class="text-sm mt-1">Dikumpulkan dalam satu mushaf setelah banyak penghafal Qur'an syahid di Perang Yamamah.</p>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-gray-800">3. Masa Khalifah Utsman</h3>
+                            <p class="text-sm mt-1">Disalin menjadi beberapa mushaf standar dan dikirim ke berbagai wilayah untuk menghindari perbedaan bacaan.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="kandungan" class="tab-content">
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-book-open"></i> Kandungan Al-Qur'an</h2>
+                        <p class="article-text">
+                            Al-Qur'an mengandung berbagai aspek kehidupan manusia, meliputi:
+                        </p>
+                        
+                        <div class="grid grid-cols-2 gap-3 mt-3">
+                            <div class="bg-blue-50 p-3 rounded-lg">
+                                <h3 class="font-bold text-blue-800"><i class="fas fa-balance-scale"></i> Aqidah</h3>
+                                <p class="text-sm mt-1">Tauhid, iman kepada Allah, malaikat, kitab, rasul, hari akhir, dan qadar.</p>
+                            </div>
+                            <div class="bg-green-50 p-3 rounded-lg">
+                                <h3 class="font-bold text-green-800"><i class="fas fa-pray"></i> Ibadah</h3>
+                                <p class="text-sm mt-1">Shalat, zakat, puasa, haji, dan berbagai bentuk ibadah lainnya.</p>
+                            </div>
+                            <div class="bg-purple-50 p-3 rounded-lg">
+                                <h3 class="font-bold text-purple-800"><i class="fas fa-handshake"></i> Muamalah</h3>
+                                <p class="text-sm mt-1">Hukum pernikahan, waris, jual beli, dan hubungan sosial.</p>
+                            </div>
+                            <div class="bg-red-50 p-3 rounded-lg">
+                                <h3 class="font-bold text-red-800"><i class="fas fa-heart"></i> Akhlak</h3>
+                                <p class="text-sm mt-1">Nilai-nilai moral dan etika dalam kehidupan.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-brain"></i> Ilmu Pengetahuan dalam Al-Qur'an</h2>
+                        <p class="article-text">
+                            Al-Qur'an mengandung banyak isyarat ilmiah yang baru terbukti secara ilmiah di zaman modern:
+                        </p>
+                        
+                        <div class="bg-yellow-50 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-yellow-800">Embriologi</h3>
+                            <p class="text-sm mt-1">"Kemudian air mani itu Kami jadikan segumpal darah, lalu segumpal darah itu Kami jadikan segumpal daging..." (QS. Al-Mu'minun: 14)</p>
+                        </div>
+                        
+                        <div class="bg-blue-50 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-blue-800">Astronomi</h3>
+                            <p class="text-sm mt-1">"Dan langit itu Kami bangun dengan kekuasaan (Kami) dan sesungguhnya Kami benar-benar meluaskannya." (QS. Adz-Dzariyat: 47)</p>
+                        </div>
+                        
+                        <div class="bg-green-50 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-green-800">Oseanografi</h3>
+                            <p class="text-sm mt-1">"Dia membiarkan dua lautan mengalir yang keduanya kemudian bertemu. Antara keduanya ada batas yang tidak dilampaui masing-masing." (QS. Ar-Rahman: 19-20)</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="keutamaan" class="tab-content">
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-crown"></i> Keutamaan Membaca Al-Qur'an</h2>
+                        <p class="article-text">
+                            Membaca dan mempelajari Al-Qur'an memiliki banyak keutamaan, di antaranya:
+                        </p>
+                        
+                        <div class="bg-green-50 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-green-800">1. Setiap Huruf Mendapat Pahala</h3>
+                            <p class="text-sm mt-1">"Barangsiapa membaca satu huruf dari Al-Qur'an maka baginya satu kebaikan, dan satu kebaikan itu dilipatgandakan menjadi sepuluh." (HR. Tirmidzi)</p>
+                        </div>
+                        
+                        <div class="bg-blue-50 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-blue-800">2. Memberi Syafaat di Akhirat</h3>
+                            <p class="text-sm mt-1">"Bacalah Al-Qur'an karena ia akan datang pada hari kiamat sebagai pemberi syafaat bagi pembacanya." (HR. Muslim)</p>
+                        </div>
+                        
+                        <div class="bg-purple-50 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-purple-800">3. Meninggikan Derajat</h3>
+                            <p class="text-sm mt-1">"Sesungguhnya Allah mengangkat derajat suatu kaum dengan kitab ini (Al-Qur'an) dan merendahkan kaum yang lain dengannya." (HR. Muslim)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-lightbulb"></i> Tips Membaca Al-Qur'an</h2>
+                        
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mt-3">
+                            <h3 class="font-bold text-green-800 flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i> Niat Ikhlas
+                            </h3>
+                            <p class="text-sm mt-1">Mulailah dengan niat yang ikhlas hanya untuk mencari ridha Allah.</p>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mt-3">
+                            <h3 class="font-bold text-green-800 flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i> Waktu Terbaik
+                            </h3>
+                            <p class="text-sm mt-1">Pilih waktu yang tenang seperti setelah shubuh atau sebelum tidur.</p>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mt-3">
+                            <h3 class="font-bold text-green-800 flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i> Tartil dan Tadabbur
+                            </h3>
+                            <p class="text-sm mt-1">Baca dengan tartil (perlahan) dan renungkan maknanya.</p>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mt-3">
+                            <h3 class="font-bold text-green-800 flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i> Konsisten
+                            </h3>
+                            <p class="text-sm mt-1">Lebih baik sedikit tapi konsisten daripada banyak tapi sesekali.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav bg-white p-2 flex justify-around items-center">
+            <a href="index2.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-home nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Beranda</span>
+            </a>
+            <a href="video.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-video nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Video</span>
+            </a>
+            <a href="kategori materi.html" class="flex flex-col items-center text-primary">
+                <i class="fas fa-quran nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Al-Qur'an</span>
+            </a>
+            <a href="kategori soal.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-book-open nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Soal</span>
+            </a>
+            <a href="profil.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-user nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Profil</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        // Tab functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons and contents
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Show corresponding content
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Bottom nav interaction
+            const navItems = document.querySelectorAll('.nav-icon');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    navItems.forEach(nav => {
+                        nav.classList.remove('active');
+                        nav.parentElement.classList.remove('text-primary');
+                        nav.parentElement.classList.add('text-gray-500');
+                    });
+                    
+                    this.classList.add('active');
+                    this.parentElement.classList.add('text-primary');
+                    this.parentElement.classList.remove('text-gray-500');
+                });
+            });
+            
+            // Set current page as active
+            document.querySelector('.bottom-nav a[href="kategori materi.html"] i').classList.add('active');
+            document.querySelector('.bottom-nav a[href="kategori materi.html"]').classList.add('text-primary');
+            document.querySelector('.bottom-nav a[href="kategori materi.html"]').classList.remove('text-gray-500');
+        });
+    </script>
+</body>
+</html>

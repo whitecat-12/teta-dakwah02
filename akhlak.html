@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teta Dakwa - Akhlak dalam Islam</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Baloo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #38b2ac;
+            --secondary: #0e7490;
+            --accent: #f59e0b;
+            --quran: #10b981;
+            --fiqh: #3b82f6;
+            --hadith: #8b5cf6;
+            --islamic: #ec4899;
+        }
+        
+        body {
+            font-family: 'Baloo 2', cursive;
+            background-color: #f8fafc;
+        }
+        
+        .arabic {
+            font-family: 'Amiri', serif;
+            font-size: 1.5rem;
+            line-height: 2.5rem;
+            text-align: right;
+            direction: rtl;
+        }
+        
+        .app-container {
+            max-width: 414px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 414px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            background: white;
+            z-index: 10;
+        }
+        
+        .nav-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .nav-icon.active {
+            transform: translateY(-10px);
+            color: var(--primary);
+        }
+        
+        .article-header {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .article-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .article-meta {
+            display: flex;
+            align-items: center;
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+        
+        .article-meta i {
+            margin-right: 0.3rem;
+        }
+        
+        .article-meta span {
+            margin-right: 1rem;
+        }
+        
+        .article-content {
+            padding: 0 1rem 5rem;
+        }
+        
+        .article-section {
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2563eb;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 0.5rem;
+        }
+        
+        .article-text {
+            line-height: 1.6;
+            text-align: justify;
+            margin-bottom: 1rem;
+        }
+        
+        .highlight-box {
+            background-color: #dbeafe;
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+        }
+        
+        .hadith-box {
+            background-color: #eff6ff;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border: 1px solid #bfdbfe;
+        }
+        
+        .hadith-number {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            background-color: #3b82f6;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 25px;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .back-button i {
+            margin-right: 0.5rem;
+        }
+        
+        .kitab-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 4px solid #3b82f6;
+            transition: all 0.3s ease;
+        }
+        
+        .kitab-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .kitab-number {
+            background-color: #3b82f6;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .app-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .app-logo-icon {
+            background: linear-gradient(135deg, #38b2ac, #0e7490);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+        }
+        
+        .app-name {
+            font-weight: 700;
+            font-size: 1.25rem;
+            background: linear-gradient(135deg, #38b2ac, #0e7490);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-button.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile App Container -->
+    <div class="app-container">
+        <!-- App Header -->
+        <header class="bg-gradient-to-r from-primary to-secondary p-4 text-white">
+            <div class="flex justify-between items-center">
+                <div class="app-logo">
+                    <div class="app-logo-icon">
+                        <i class="fas fa-mosque"></i>
+                    </div>
+                    <h1 class="app-name">TETA DAKWA</h1>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-bell"></i>
+                    <i class="fas fa-user-circle text-xl"></i>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Article Content -->
+        <main class="pb-20">
+            <div class="article-header">
+                <a href="javascript:history.back()" class="back-button">
+                    <i class="fas fa-arrow-left"></i> Kembali
+                </a>
+                <h1 class="article-title">Akhlak Mulia dalam Islam</h1>
+                <div class="article-meta">
+                    <span><i class="fas fa-book-open"></i> Akhlak Islami</span>
+                    <span><i class="fas fa-clock"></i> 10 min baca</span>
+                    <span><i class="fas fa-calendar"></i> 15 Juni 2024</span>
+                </div>
+            </div>
+            
+            <div class="article-content">
+                <!-- Tab Navigation -->
+                <div class="flex overflow-x-auto gap-2 mb-4 pb-2">
+                    <button class="tab-button active" data-tab="pengantar">Pengantar</button>
+                    <button class="tab-button" data-tab="jenis">Jenis Akhlak</button>
+                    <button class="tab-button" data-tab="teladan">Teladan Nabi</button>
+                    <button class="tab-button" data-tab="penerapan">Penerapan</button>
+                </div>
+                
+                <!-- Tab Contents -->
+                <div id="pengantar" class="tab-content active">
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-info-circle"></i> Apa Itu Akhlak?</h2>
+                        <p class="article-text">
+                            Akhlak dalam Islam adalah perilaku atau budi pekerti yang melekat pada diri seseorang yang tercermin dalam sikap dan perbuatan sehari-hari. Akhlak mencakup hubungan dengan Allah (hablum minallah) dan hubungan dengan sesama manusia (hablum minannas).
+                        </p>
+                        
+                        <div class="hadith-box">
+                            <p class="arabic">قَالَ رَسُولُ اللَّهِ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ: «إِنَّمَا بُعِثْتُ لِأُتَمِّمَ مَكَارِمَ الْأَخْلَاقِ»</p>
+                            <p class="mt-2">Rasulullah SAW bersabda: "Sesungguhnya aku diutus untuk menyempurnakan akhlak yang mulia." (HR. Ahmad)</p>
+                            <span class="hadith-number">1</span>
+                        </div>
+                    </div>
+                    
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-star"></i> Dasar-Dasar Akhlak Islami</h2>
+                        <div class="grid grid-cols-2 gap-3 mt-3">
+                            <div class="bg-blue-50 p-3 rounded-lg">
+                                <h3 class="font-bold text-blue-800">Al-Qur'an</h3>
+                                <p>Sumber utama ajaran akhlak dalam Islam</p>
+                            </div>
+                            <div class="bg-blue-100 p-3 rounded-lg">
+                                <h3 class="font-bold text-blue-800">Hadits</h3>
+                                <p>Contoh praktis akhlak dari Rasulullah SAW</p>
+                            </div>
+                            <div class="bg-blue-50 p-3 rounded-lg">
+                                <h3 class="font-bold text-blue-800">Ihsan</h3>
+                                <p>Beribadah seolah-olah melihat Allah</p>
+                            </div>
+                            <div class="bg-blue-100 p-3 rounded-lg">
+                                <h3 class="font-bold text-blue-800">Taqwa</h3>
+                                <p>Landasan utama pembentukan akhlak</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-book"></i> Kitab Akhlak Populer</h2>
+                        
+                        <div class="kitab-card">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center">
+                                    <div class="kitab-number">1</div>
+                                    <h3 class="font-bold ml-2">Riyadhus Shalihin</h3>
+                                </div>
+                                <span class="text-sm text-gray-500">Imam Nawawi</span>
+                            </div>
+                            <p class="text-sm text-gray-600">Kitab yang mengumpulkan hadits-hadits tentang akhlak, ibadah, dan muamalah.</p>
+                        </div>
+                        
+                        <div class="kitab-card">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center">
+                                    <div class="kitab-number">2</div>
+                                    <h3 class="font-bold ml-2">Al-Adab al-Mufrad</h3>
+                                </div>
+                                <span class="text-sm text-gray-500">Imam Bukhari</span>
+                            </div>
+                            <p class="text-sm text-gray-600">Kitab khusus tentang adab dan akhlak dalam Islam.</p>
+                        </div>
+                        
+                        <div class="kitab-card">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center">
+                                    <div class="kitab-number">3</div>
+                                    <h3 class="font-bold ml-2">Akhlak Lil Banin</h3>
+                                </div>
+                                <span class="text-sm text-gray-500">Umar Ahmad</span>
+                            </div>
+                            <p class="text-sm text-gray-600">Kitab pendidikan akhlak untuk anak-anak muslim.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="jenis" class="tab-content">
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-list"></i> Jenis-Jenis Akhlak</h2>
+                        <p class="article-text">
+                            Akhlak dalam Islam terbagi menjadi dua jenis utama:
+                        </p>
+                        
+                        <div class="hadith-box">
+                            <p class="arabic">قَالَ رَسُولُ اللَّهِ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ: «أَكْمَلُ الْمُؤْمِنِينَ إِيمَانًا أَحْسَنُهُمْ خُلُقًا»</p>
+                            <p class="mt-2">Rasulullah SAW bersabda: "Orang mukmin yang paling sempurna imannya adalah yang paling baik akhlaknya." (HR. Tirmidzi)</p>
+                            <span class="hadith-number">2</span>
+                        </div>
+                    </div>
+                    
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-check-circle"></i> Akhlak Mahmudah (Terpuji)</h2>
+                        
+                        <div class="bg-blue-50 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-blue-800">1. Jujur (Shiddiq)</h3>
+                            <p class="text-sm mt-1">Sifat yang sangat dijunjung tinggi dalam Islam. Rasulullah SAW dikenal sebagai Al-Amin (yang terpercaya).</p>
+                        </div>
+                        
+                        <div class="bg-blue-100 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-blue-800">2. Sabar</h3>
+                            <p class="text-sm mt-1">Menahan diri dari keluh kesah dan emosi negatif ketika menghadapi ujian.</p>
+                        </div>
+                        
+                        <div class="bg-blue-50 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-blue-800">3. Tawadhu'</h3>
+                            <p class="text-sm mt-1">Rendah hati, tidak sombong, dan menghargai orang lain.</p>
+                        </div>
+                        
+                        <div class="bg-blue-100 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-blue-800">4. Pemaaf</h3>
+                            <p class="text-sm mt-1">Memaafkan kesalahan orang lain dan tidak mendendam.</p>
+                        </div>
+                        
+                        <div class="bg-blue-50 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-blue-800">5. Dermawan</h3>
+                            <p class="text-sm mt-1">Suka berbagi dan membantu sesama tanpa pamrih.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-times-circle"></i> Akhlak Mazmumah (Tercela)</h2>
+                        
+                        <div class="bg-red-50 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-red-800">1. Dengki (Hasad)</h3>
+                            <p class="text-sm mt-1">Tidak senang melihat orang lain mendapatkan nikmat dan berharap nikmat itu hilang.</p>
+                        </div>
+                        
+                        <div class="bg-red-100 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-red-800">2. Sombong (Takabbur)</h3>
+                            <p class="text-sm mt-1">Menganggap diri lebih tinggi dari orang lain dan merendahkan mereka.</p>
+                        </div>
+                        
+                        <div class="bg-red-50 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-red-800">3. Ghibah</h3>
+                            <p class="text-sm mt-1">Membicarakan keburukan orang lain di belakangnya.</p>
+                        </div>
+                        
+                        <div class="bg-red-100 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-red-800">4. Pemarah</h3>
+                            <p class="text-sm mt-1">Tidak bisa mengendalikan emosi dan mudah marah.</p>
+                        </div>
+                        
+                        <div class="bg-red-50 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-red-800">5. Kikir</h3>
+                            <p class="text-sm mt-1">Tidak mau berbagi dan enggan membantu orang lain.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="teladan" class="tab-content">
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-user-tie"></i> Akhlak Rasulullah SAW</h2>
+                        <p class="article-text">
+                            Rasulullah SAW adalah teladan terbaik dalam hal akhlak. Berikut beberapa contoh akhlak mulia beliau:
+                        </p>
+                        
+                        <div class="grid grid-cols-2 gap-3 mt-3">
+                            <div class="bg-blue-50 p-3 rounded-lg">
+                                <h3 class="font-bold text-blue-800"><i class="fas fa-heart"></i> Kasih Sayang</h3>
+                                <p class="text-sm mt-1">Sangat penyayang kepada anak-anak, orang tua, dan seluruh umat.</p>
+                            </div>
+                            <div class="bg-blue-100 p-3 rounded-lg">
+                                <h3 class="font-bold text-blue-800"><i class="fas fa-handshake"></i> Adil</h3>
+                                <p class="text-sm mt-1">Tidak membeda-bedakan dalam memberikan hak kepada siapa pun.</p>
+                            </div>
+                            <div class="bg-blue-50 p-3 rounded-lg">
+                                <h3 class="font-bold text-blue-800"><i class="fas fa-comments"></i> Lemah Lembut</h3>
+                                <p class="text-sm mt-1">Berkata dengan santun dan tidak kasar dalam berbicara.</p>
+                            </div>
+                            <div class="bg-blue-100 p-3 rounded-lg">
+                                <h3 class="font-bold text-blue-800"><i class="fas fa-grin-beam"></i> Ramah</h3>
+                                <p class="text-sm mt-1">Selalu tersenyum dan menyambut tamu dengan baik.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-lightbulb"></i> Hikmah Meneladani Akhlak Nabi</h2>
+                        
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mt-3">
+                            <h3 class="font-bold text-blue-800 flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i> Mendapat Cinta Allah
+                            </h3>
+                            <p class="text-sm mt-1">"Sesungguhnya orang yang paling aku cintai di antara kalian dan yang paling dekat tempat duduknya denganku pada hari kiamat adalah yang paling baik akhlaknya." (HR. Tirmidzi)</p>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mt-3">
+                            <h3 class="font-bold text-blue-800 flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i> Memperberat Timbangan Amal
+                            </h3>
+                            <p class="text-sm mt-1">"Tidak ada sesuatu yang lebih berat dalam timbangan (amal) seorang mukmin pada hari kiamat daripada akhlak yang baik." (HR. Tirmidzi)</p>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mt-3">
+                            <h3 class="font-bold text-blue-800 flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i> Meningkatkan Kualitas Iman
+                            </h3>
+                            <p class="text-sm mt-1">Akhlak yang baik adalah bukti kesempurnaan iman seseorang.</p>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mt-3">
+                            <h3 class="font-bold text-blue-800 flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i> Mempererat Ukhuwah
+                            </h3>
+                            <p class="text-sm mt-1">Akhlak yang baik akan menciptakan hubungan persaudaraan yang kuat.</p>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mt-3">
+                            <h3 class="font-bold text-blue-800 flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i> Dakwah yang Efektif
+                            </h3>
+                            <p class="text-sm mt-1">Akhlak mulia adalah dakwah tanpa kata yang sangat berpengaruh.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="penerapan" class="tab-content">
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-hands-helping"></i> Penerapan Akhlak Mulia</h2>
+                        <p class="article-text">
+                            Berikut contoh penerapan akhlak mulia dalam kehidupan sehari-hari:
+                        </p>
+                        
+                        <div class="bg-blue-50 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-blue-800">1. Dalam Keluarga</h3>
+                            <p class="text-sm mt-1">- Berbakti kepada orang tua<br>- Menyayangi saudara<br>- Menghormati yang lebih tua<br>- Menyantuni yang lebih muda</p>
+                        </div>
+                        
+                        <div class="bg-blue-100 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-blue-800">2. Dalam Masyarakat</h3>
+                            <p class="text-sm mt-1">- Menjenguk yang sakit<br>- Menghadiri undangan<br>- Menebar salam<br>- Menjaga lisan dari ghibah</p>
+                        </div>
+                        
+                        <div class="bg-blue-50 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-blue-800">3. Dalam Bermedia Sosial</h3>
+                            <p class="text-sm mt-1">- Tidak menyebar hoax<br>- Menghindari komentar negatif<br>- Menjaga privasi orang lain<br>- Berbagi konten yang bermanfaat</p>
+                        </div>
+                    </div>
+                    
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-book-reader"></i> Tips Membentuk Akhlak Mulia</h2>
+                        
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mt-3">
+                            <h3 class="font-bold text-blue-800 flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i> Perbanyak Membaca Al-Qur'an
+                            </h3>
+                            <p class="text-sm mt-1">Al-Qur'an mengandung pedoman akhlak yang sempurna.</p>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mt-3">
+                            <h3 class="font-bold text-blue-800 flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i> Pelajari Sirah Nabawiyah
+                            </h3>
+                            <p class="text-sm mt-1">Teladani kehidupan Rasulullah SAW sebagai contoh terbaik.</p>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mt-3">
+                            <h3 class="font-bold text-blue-800 flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i> Bergaul dengan Orang Shalih
+                            </h3>
+                            <p class="text-sm mt-1">Lingkungan sangat mempengaruhi pembentukan akhlak.</p>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mt-3">
+                            <h3 class="font-bold text-blue-800 flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i> Evaluasi Diri Setiap Hari
+                            </h3>
+                            <p class="text-sm mt-1">Muhasabah untuk memperbaiki kesalahan dan kekurangan.</p>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mt-3">
+                            <h3 class="font-bold text-blue-800 flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i> Berdoa untuk Akhlak yang Baik
+                            </h3>
+                            <p class="text-sm mt-1">"Ya Allah, tunjukkanlah aku pada akhlak yang paling baik." (HR. Ahmad)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav bg-white p-2 flex justify-around items-center">
+            <a href="index2.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-home nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Beranda</span>
+            </a>
+            <a href="video.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-video nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Video</span>
+            </a>
+            <a href="kategori materi.html" class="flex flex-col items-center text-primary">
+                <i class="fas fa-quran nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Akhlak</span>
+            </a>
+            <a href="kategori soal.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-book-open nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Soal</span>
+            </a>
+            <a href="profil.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-user nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Profil</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        // Tab functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons and contents
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Show corresponding content
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Bottom nav interaction
+            const navItems = document.querySelectorAll('.nav-icon');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    navItems.forEach(nav => {
+                        nav.classList.remove('active');
+                        nav.parentElement.classList.remove('text-primary');
+                        nav.parentElement.classList.add('text-gray-500');
+                    });
+                    
+                    this.classList.add('active');
+                    this.parentElement.classList.add('text-primary');
+                    this.parentElement.classList.remove('text-gray-500');
+                });
+            });
+            
+            // Set current page as active
+            document.querySelector('.bottom-nav a[href="kategori materi.html"] i').classList.add('active');
+            document.querySelector('.bottom-nav a[href="kategori materi.html"]').classList.add('text-primary');
+            document.querySelector('.bottom-nav a[href="kategori materi.html"]').classList.remove('text-gray-500');
+        });
+    </script>
+</body>
+</html>

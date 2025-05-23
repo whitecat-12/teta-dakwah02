@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login, Register, dan Profil User</title>
+</head>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login / Register</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .container {
+      background: white;
+      width: 100%;
+      max-width: 400px;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #28a745;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+      background-color: #28a745;
+      color: white;
+      font-size: 1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    #profile {
+      margin-top: 1.5rem;
+    }
+
+    #profile p {
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    #logoutBtn {
+      background-color: #dc3545;
+    }
+
+    #logoutBtn:hover {
+      background-color: #c82333;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Login / Register</h2>
+    <div id="loginDiv">
+      <input type="email" id="emailInput" placeholder="Email" />
+      <input type="password" id="passwordInput" placeholder="Password" />
+      <input type="text" id="usernameRegisterInput" placeholder="Username" />
+      <button id="loginBtn">Login</button>
+      <button id="registerBtn">Register</button>
+    </div>
+
+    <div id="profile" style="display:none;">
+      <h2>Profil User</h2>
+      <p id="status">Status: Belum login</p>
+      <p>Username: <span id="usernameDisplay"></span></p>
+      <input type="text" id="usernameInput" placeholder="Ubah username" />
+      <button id="updateUsernameBtn">Update Username</button>
+      <button id="logoutBtn">Logout</button>
+    </div>
+  </div>
+
+</body>
+</html>
+
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut,
+      updateProfile,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+    } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc,
+    } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAJ5I8k2MzAyDLt9fUcXHRNtRVjKB_ETLY",
+      authDomain: "projectid-81104.firebaseapp.com",
+      projectId: "projectid-81104",
+      storageBucket: "projectid-81104.firebasestorage.app",
+      messagingSenderId: "554913260457",
+      appId: "1:554913260457:web:bf988867ebfd902c651ab8",
+      measurementId: "G-8WFHQW5WGN",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const loginDiv = document.getElementById("loginDiv");
+    const emailInput = document.getElementById("emailInput");
+    const passwordInput = document.getElementById("passwordInput");
+    const usernameRegisterInput = document.getElementById("usernameRegisterInput");
+    const loginBtn = document.getElementById("loginBtn");
+    const registerBtn = document.getElementById("registerBtn");
+
+    const statusText = document.getElementById("status");
+    const profileDiv = document.getElementById("profile");
+    const usernameDisplay = document.getElementById("usernameDisplay");
+    const usernameInput = document.getElementById("usernameInput");
+    const updateUsernameBtn = document.getElementById("updateUsernameBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    let currentUser = null;
+
+    // Monitor status login
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        currentUser = user;
+        loginDiv.style.display = "none";
+        profileDiv.style.display = "block";
+        statusText.textContent = `Status: Login sebagai ${user.email}`;
+
+        // Ambil username dari Firestore
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          usernameDisplay.textContent = data.username || "(belum ada username)";
+          usernameInput.value = data.username || "";
+        } else {
+          usernameDisplay.textContent = "(data user tidak ditemukan)";
+          usernameInput.value = "";
+        }
+      } else {
+        currentUser = null;
+        loginDiv.style.display = "block";
+        profileDiv.style.display = "none";
+        statusText.textContent = "Status: Belum login";
+        emailInput.value = "";
+        passwordInput.value = "";
+        usernameRegisterInput.value = "";
+      }
+    });
+
+    // Login user
+    // Login user
+loginBtn.addEventListener("click", async () => {
+  const email = emailInput.value.trim();
+  const password = passwordInput.value.trim();
+  if (!email || !password) return alert("Email dan password harus diisi!");
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    alert("Login berhasil!");
+    window.location.href = "index2.html"; // ⬅️ Redirect ke index.html
+  } catch (err) {
+    alert("Gagal login: " + err.message);
+  }
+});
+
+// Register user baru
+registerBtn.addEventListener("click", async () => {
+  const email = emailInput.value.trim();
+  const password = passwordInput.value.trim();
+  const username = usernameRegisterInput.value.trim();
+  if (!email || !password || !username) return alert("Email, password, dan username harus diisi!");
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    await setDoc(doc(db, "users", user.uid), { username });
+    await updateProfile(user, { displayName: username });
+
+    alert("Registrasi berhasil! Kamu sudah login.");
+    window.location.href = "index.html"; // ⬅️ Redirect ke index.html
+  } catch (err) {
+    alert("Gagal registrasi: " + err.message);
+  }
+});
+
+
+    // Update username di Firestore dan Auth profile
+    updateUsernameBtn.addEventListener("click", async () => {
+      if (!currentUser) return alert("Kamu harus login dulu!");
+      const newUsername = usernameInput.value.trim();
+      if (!newUsername) return alert("Username tidak boleh kosong!");
+      try {
+        const docRef = doc(db, "users", currentUser.uid);
+        await setDoc(docRef, { username: newUsername }, { merge: true });
+        await updateProfile(currentUser, { displayName: newUsername });
+        usernameDisplay.textContent = newUsername;
+        alert("Username berhasil diperbarui!");
+      } catch (error) {
+        alert("Gagal update username: " + error.message);
+      }
+    });
+
+    // Logout user
+    logoutBtn.addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        alert("Berhasil logout");
+      } catch (error) {
+        alert("Error saat logout: " + error.message);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teta Dakwa - Jenis-Jenis Soal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #38b2ac;
+            --secondary: #0e7490;
+            --accent: #f59e0b;
+            --quran: #10b981;
+            --fiqh: #3b82f6;
+            --hadith: #8b5cf6;
+            --islamic: #ec4899;
+        }
+        
+        body {
+            font-family: 'Baloo 2', cursive;
+            background-color: #f8fafc;
+        }
+        
+        .app-container {
+            max-width: 414px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 414px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            background: white;
+            z-index: 10;
+        }
+        
+        .nav-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .nav-icon.active {
+            transform: translateY(-10px);
+            color: var(--primary);
+        }
+        
+        .floating-btn {
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .bounce {
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+        
+        .islamic-pattern {
+            background-image: radial-gradient(rgba(56, 178, 172, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        .section-content {
+            display: none;
+            padding: 16px;
+            background: white;
+            border-radius: 12px;
+            margin-top: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        
+        .active-section {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .video-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .video-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .progress-bar {
+            height: 6px;
+            border-radius: 3px;
+            background-color: #e5e7eb;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+        
+        .sticker {
+            position: absolute;
+            right: -10px;
+            top: -10px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+            transform: rotate(15deg);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .achievement-badge {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .achievement-badge::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            border: 2px dashed currentColor;
+            opacity: 0.3;
+            animation: spin 10s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .app-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .app-logo-icon {
+            background: linear-gradient(135deg, #38b2ac, #0e7490);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+        }
+        
+        .app-name {
+            font-weight: 700;
+            font-size: 1.25rem;
+            background: linear-gradient(135deg, #38b2ac, #0e7490);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .question-category {
+            transition: all 0.3s ease;
+            border-left: 4px solid;
+        }
+        
+        .question-category:hover {
+            transform: translateX(5px);
+        }
+        
+        .difficulty-badge {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile App Container -->
+    <div class="app-container">
+        <!-- App Header -->
+        <header class="bg-gradient-to-r from-primary to-secondary p-4 text-white">
+            <div class="flex justify-between items-center">
+                <div class="app-logo">
+                    <div class="app-logo-icon">
+                        <i class="fas fa-mosque"></i>
+                    </div>
+                    <h1 class="app-name">TETA DAKWA</h1>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-search"></i>
+                    <i class="fas fa-user-circle text-xl"></i>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main Content Area -->
+        <main class="pb-20 islamic-pattern">
+            <!-- Page Title -->
+            <section class="p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">Jenis-Jenis Soal</h2>
+                        <p class="text-sm text-gray-600">Pilih kategori soal untuk menguji pengetahuan Islamimu</p>
+                    </div>
+                    <div class="bg-primary/10 text-primary p-3 rounded-full">
+                        <i class="fas fa-question-circle text-xl"></i>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Question Categories -->
+            <section class="p-4">
+                <!-- Quran Questions -->
+                <div class="question-category bg-white rounded-lg shadow-sm p-4 mb-4 border-l-green-500" onclick="window.location.href='soal quran.html'">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="bg-green-100 text-green-600 p-3 rounded-lg mr-3">
+                                <i class="fas fa-book-quran"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800">Soal Al-Quran</h3>
+                                <p class="text-xs text-gray-500">Tentang surat, ayat, dan makna</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <span class="difficulty-badge bg-green-100 text-green-800">Mudah</span>
+                            <span class="text-xs text-gray-500 mt-1">50 soal</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Fiqh Questions -->
+               <div class="question-category bg-white rounded-lg shadow-sm p-4 mb-4 border-l-blue-500" onclick="window.location.href='soal fiqih.html'">
+					<div class="flex justify-between items-center">
+						<div class="flex items-center">
+                            <div class="bg-blue-100 text-blue-600 p-3 rounded-lg mr-3">
+                                <i class="fas fa-hands-praying"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800">Soal Fiqh Ibadah</h3>
+                                <p class="text-xs text-gray-500">Tentang sholat, wudhu, puasa</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <span class="difficulty-badge bg-blue-100 text-blue-800">Sedang</span>
+                            <span class="text-xs text-gray-500 mt-1">75 soal</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Hadith Questions -->
+                <div class="question-category bg-white rounded-lg shadow-sm p-4 mb-4 border-l-purple-500" onclick="window.location.href='soal hadist.html'">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="bg-purple-100 text-purple-600 p-3 rounded-lg mr-3">
+                                <i class="fas fa-quote-right"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800">Soal Hadits</h3>
+                                <p class="text-xs text-gray-500">Tentang ajaran Nabi Muhammad</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <span class="difficulty-badge bg-purple-100 text-purple-800">Sulit</span>
+                            <span class="text-xs text-gray-500 mt-1">30 soal</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sirah Nabawiyah Questions -->
+                <div class="question-category bg-white rounded-lg shadow-sm p-4 mb-4 border-l-yellow-500" onclick="window.location.href='soal surah.html'">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="bg-yellow-100 text-yellow-600 p-3 rounded-lg mr-3">
+                                <i class="fas fa-history"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800">Sirah Nabawiyah</h3>
+                                <p class="text-xs text-gray-500">Sejarah kehidupan Nabi</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <span class="difficulty-badge bg-yellow-100 text-yellow-800">Sedang</span>
+                            <span class="text-xs text-gray-500 mt-1">40 soal</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Akidah Questions -->
+                <div class="question-category bg-white rounded-lg shadow-sm p-4 mb-4 border-l-red-500" onclick="window.location.href='soal akidah.html'">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="bg-red-100 text-red-600 p-3 rounded-lg mr-3">
+                                <i class="fas fa-fingerprint"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800">Soal Akidah</h3>
+                                <p class="text-xs text-gray-500">Tentang keimanan dan tauhid</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <span class="difficulty-badge bg-red-100 text-red-800">Sulit</span>
+                            <span class="text-xs text-gray-500 mt-1">25 soal</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Akhlak Questions -->
+                <div class="question-category bg-white rounded-lg shadow-sm p-4 mb-4 border-l-pink-500" onclick="window.location.href='soal akhlak.html'">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="bg-pink-100 text-pink-600 p-3 rounded-lg mr-3">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800">Soal Akhlak</h3>
+                                <p class="text-xs text-gray-500">Tentang adab dan moral Islam</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <span class="difficulty-badge bg-pink-100 text-pink-800">Mudah</span>
+                            <span class="text-xs text-gray-500 mt-1">60 soal</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Islamic History Questions -->
+                <div class="question-category bg-white rounded-lg shadow-sm p-4 mb-4 border-l-indigo-500" onclick="window.location.href='soal sejarah.html'">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="bg-indigo-100 text-indigo-600 p-3 rounded-lg mr-3">
+                                <i class="fas fa-landmark"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800">Sejarah Islam</h3>
+                                <p class="text-xs text-gray-500">Peradaban dan tokoh Islam</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <span class="difficulty-badge bg-indigo-100 text-indigo-800">Sedang</span>
+                            <span class="text-xs text-gray-500 mt-1">35 soal</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Daily Life Questions -->
+                <div class="question-category bg-white rounded-lg shadow-sm p-4 border-l-teal-500" onclick="window.location.href='soal kehidupan.html'">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="bg-teal-100 text-teal-600 p-3 rounded-lg mr-3">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800">Kehidupan Sehari-hari</h3>
+                                <p class="text-xs text-gray-500">Praktik Islam dalam aktivitas</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <span class="difficulty-badge bg-teal-100 text-teal-800">Mudah</span>
+                            <span class="text-xs text-gray-500 mt-1">45 soal</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Question Types Info -->
+            <section class="p-4">
+                <div class="bg-white rounded-xl shadow-md p-4">
+                    <h3 class="font-bold text-gray-800 mb-2 flex items-center">
+                        <i class="fas fa-info-circle text-primary mr-2"></i> Jenis Soal yang Tersedia
+                    </h3>
+                    
+                    <div class="grid grid-cols-2 gap-2 mt-3">
+                        <div class="bg-gray-50 p-2 rounded-lg text-center">
+                            <div class="bg-primary/10 text-primary p-2 rounded-full inline-block">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <p class="text-xs font-medium mt-1">Pilihan Ganda</p>
+                        </div>
+                        <div class="bg-gray-50 p-2 rounded-lg text-center">
+                            <div class="bg-green-100 text-green-600 p-2 rounded-full inline-block">
+                                <i class="fas fa-check-double"></i>
+                            </div>
+                            <p class="text-xs font-medium mt-1">Benar/Salah</p>
+                        </div>
+                        <div class="bg-gray-50 p-2 rounded-lg text-center">
+                            <div class="bg-yellow-100 text-yellow-600 p-2 rounded-full inline-block">
+                                <i class="fas fa-puzzle-piece"></i>
+                            </div>
+                            <p class="text-xs font-medium mt-1">Mencocokkan</p>
+                        </div>
+                        <div class="bg-gray-50 p-2 rounded-lg text-center">
+                            <div class="bg-red-100 text-red-600 p-2 rounded-full inline-block">
+                                <i class="fas fa-font"></i>
+                            </div>
+                            <p class="text-xs font-medium mt-1">Isian Singkat</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Start Practice Button -->
+            <section class="p-4">
+                <button class="w-full py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-xl font-bold flex items-center justify-center shadow-lg">
+                    <i class="fas fa-play-circle mr-2"></i> Mulai Latihan Soal
+                </button>
+            </section>
+        </main>
+        
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav bg-white p-2 flex justify-around items-center">
+            <a href="index2.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-home nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Beranda</span>
+            </a>
+            <a href="video.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-video nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Video</span>
+            </a>
+            <a href="kategori materi.html" class="flex flex-col items-center text-gray-500">
+				<i class="fas fa-quran nav-icon text-xl"></i>
+				<span class="text-xs mt-1">Materi Harian</span>
+			</a>
+            <a href="kategori soal.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-book-open nav-icon text-xl active"></i>
+                <span class="text-xs mt-1">Soal Harian</span>
+            </a>
+            <a href="profil.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-user nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Profil</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        // Simple interaction for bottom nav
+        document.addEventListener('DOMContentLoaded', function() {
+            const navItems = document.querySelectorAll('.nav-icon');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Remove active class from all
+                    navItems.forEach(nav => {
+                        nav.classList.remove('active');
+                        nav.parentElement.classList.remove('text-primary');
+                        nav.parentElement.classList.add('text-gray-500');
+                    });
+                    
+                    // Add to clicked
+                    this.classList.add('active');
+                    this.parentElement.classList.add('text-primary');
+                    this.parentElement.classList.remove('text-gray-500');
+                });
+            });
+            
+            // Set current page as active
+            document.querySelector('.bottom-nav a[href="soal.html"] i').classList.add('active');
+            document.querySelector('.bottom-nav a[href="soal.html"]').classList.add('text-primary');
+            document.querySelector('.bottom-nav a[href="soal.html"]').classList.remove('text-gray-500');
+        });
+        
+        function showQuestionCategory(category) {
+            // In a real app, this would navigate to the selected category
+            alert(`Membuka kategori soal: ${category}`);
+            
+            // For demo purposes, we'll just show an alert
+            const categoryNames = {
+                'quran': 'Al-Quran',
+                'fiqh': 'Fiqh Ibadah',
+                'hadith': 'Hadits',
+                'sirah': 'Sirah Nabawiyah',
+                'akidah': 'Akidah',
+                'akhlak': 'Akhlak',
+                'history': 'Sejarah Islam',
+                'daily': 'Kehidupan Sehari-hari'
+            };
+            
+            alert(`Anda akan memulai latihan soal ${categoryNames[category]}.`);
+        }
+    </script>
+</body>
+</html>

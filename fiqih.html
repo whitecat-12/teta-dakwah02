@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teta Dakwa - Mengenal Fiqih Islam</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Baloo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #38b2ac;
+            --secondary: #0e7490;
+            --accent: #f59e0b;
+            --quran: #10b981;
+            --fiqh: #3b82f6;
+            --hadith: #8b5cf6;
+            --islamic: #ec4899;
+        }
+        
+        body {
+            font-family: 'Baloo 2', cursive;
+            background-color: #f8fafc;
+        }
+        
+        .arabic {
+            font-family: 'Amiri', serif;
+            font-size: 1.5rem;
+            line-height: 2.5rem;
+            text-align: right;
+            direction: rtl;
+        }
+        
+        .app-container {
+            max-width: 414px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 414px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            background: white;
+            z-index: 10;
+        }
+        
+        .nav-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .nav-icon.active {
+            transform: translateY(-10px);
+            color: var(--primary);
+        }
+        
+        .article-header {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .article-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .article-meta {
+            display: flex;
+            align-items: center;
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+        
+        .article-meta i {
+            margin-right: 0.3rem;
+        }
+        
+        .article-meta span {
+            margin-right: 1rem;
+        }
+        
+        .article-content {
+            padding: 0 1rem 5rem;
+        }
+        
+        .article-section {
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2563eb;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 0.5rem;
+        }
+        
+        .article-text {
+            line-height: 1.6;
+            text-align: justify;
+            margin-bottom: 1rem;
+        }
+        
+        .highlight-box {
+            background-color: #dbeafe;
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+        }
+        
+        .hadith-box {
+            background-color: #eff6ff;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border: 1px solid #bfdbfe;
+        }
+        
+        .hadith-number {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            background-color: #3b82f6;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 25px;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .back-button i {
+            margin-right: 0.5rem;
+        }
+        
+        .kitab-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 4px solid #3b82f6;
+            transition: all 0.3s ease;
+        }
+        
+        .kitab-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .kitab-number {
+            background-color: #3b82f6;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .app-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .app-logo-icon {
+            background: linear-gradient(135deg, #38b2ac, #0e7490);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+        }
+        
+        .app-name {
+            font-weight: 700;
+            font-size: 1.25rem;
+            background: linear-gradient(135deg, #38b2ac, #0e7490);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-button.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile App Container -->
+    <div class="app-container">
+        <!-- App Header -->
+        <header class="bg-gradient-to-r from-primary to-secondary p-4 text-white">
+            <div class="flex justify-between items-center">
+                <div class="app-logo">
+                    <div class="app-logo-icon">
+                        <i class="fas fa-mosque"></i>
+                    </div>
+                    <h1 class="app-name">TETA DAKWA</h1>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-bell"></i>
+                    <i class="fas fa-user-circle text-xl"></i>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Article Content -->
+        <main class="pb-20">
+            <div class="article-header">
+                <a href="javascript:history.back()" class="back-button">
+                    <i class="fas fa-arrow-left"></i> Kembali
+                </a>
+                <h1 class="article-title">Mengenal Fiqih: Pedoman Hukum Islam</h1>
+                <div class="article-meta">
+                    <span><i class="fas fa-book-open"></i> Fiqih</span>
+                    <span><i class="fas fa-clock"></i> 12 min baca</span>
+                    <span><i class="fas fa-calendar"></i> 15 Juni 2024</span>
+                </div>
+            </div>
+            
+            <div class="article-content">
+                <!-- Tab Navigation -->
+                <div class="flex overflow-x-auto gap-2 mb-4 pb-2">
+                    <button class="tab-button active" data-tab="pengantar">Pengantar</button>
+                    <button class="tab-button" data-tab="mazhab">Mazhab</button>
+                    <button class="tab-button" data-tab="pembagian">Pembagian</button>
+                    <button class="tab-button" data-tab="keutamaan">Keutamaan</button>
+                </div>
+                
+                <!-- Tab Contents -->
+                <div id="pengantar" class="tab-content active">
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-info-circle"></i> Apa Itu Fiqih?</h2>
+                        <p class="article-text">
+                            Fiqih adalah pemahaman mendalam tentang hukum-hukum syariat Islam yang bersifat praktis yang diambil dari dalil-dalil terperinci. Fiqih merupakan ilmu yang membahas tentang hukum-hukum Islam yang berkaitan dengan amal perbuatan manusia, baik yang wajib, sunnah, mubah, makruh, maupun haram.
+                        </p>
+                        
+                        <div class="hadith-box">
+                            <p class="arabic">قَالَ رَسُولُ اللَّهِ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ: «مَنْ يُرِدِ اللَّهُ بِهِ خَيْرًا يُفَقِّهْهُ فِي الدِّينِ»</p>
+                            <p class="mt-2">Rasulullah SAW bersabda: "Barangsiapa yang Allah kehendaki kebaikan padanya, niscaya Allah akan memahamkannya dalam urusan agama." (HR. Bukhari dan Muslim)</p>
+                            <span class="hadith-number">1</span>
+                        </div>
+                    </div>
+                    
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-star"></i> Fakta Dasar Fiqih</h2>
+                        <div class="grid grid-cols-2 gap-3 mt-3">
+                            <div class="bg-blue-50 p-3 rounded-lg">
+                                <h3 class="font-bold text-blue-800">Sumber Hukum</h3>
+                                <p>Al-Qur'an, Hadits, Ijma', Qiyas</p>
+                            </div>
+                            <div class="bg-blue-100 p-3 rounded-lg">
+                                <h3 class="font-bold text-blue-800">Tingkatan Hukum</h3>
+                                <p>Wajib, Sunnah, Mubah, Makruh, Haram</p>
+                            </div>
+                            <div class="bg-blue-50 p-3 rounded-lg">
+                                <h3 class="font-bold text-blue-800">Bidang Fiqih</h3>
+                                <p>Ibadah, Muamalah, Munakahat, Jinayat</p>
+                            </div>
+                            <div class="bg-blue-100 p-3 rounded-lg">
+                                <h3 class="font-bold text-blue-800">Metode Istinbat</h3>
+                                <p>Ijma', Qiyas, Istihsan, Maslahah Mursalah</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-book"></i> Kitab Fiqih Populer</h2>
+                        
+                        <div class="kitab-card">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center">
+                                    <div class="kitab-number">1</div>
+                                    <h3 class="font-bold ml-2">Al-Umm</h3>
+                                </div>
+                                <span class="text-sm text-gray-500">Imam Syafi'i</span>
+                            </div>
+                            <p class="text-sm text-gray-600">Kitab fiqih monumental karya Imam Syafi'i yang menjadi rujukan utama mazhab Syafi'i.</p>
+                        </div>
+                        
+                        <div class="kitab-card">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center">
+                                    <div class="kitab-number">2</div>
+                                    <h3 class="font-bold ml-2">Bidayatul Mujtahid</h3>
+                                </div>
+                                <span class="text-sm text-gray-500">Ibnu Rusyd</span>
+                            </div>
+                            <p class="text-sm text-gray-600">Kitab perbandingan mazhab yang membahas perbedaan pendapat para ulama.</p>
+                        </div>
+                        
+                        <div class="kitab-card">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center">
+                                    <div class="kitab-number">3</div>
+                                    <h3 class="font-bold ml-2">Al-Mughni</h3>
+                                </div>
+                                <span class="text-sm text-gray-500">Ibnu Qudamah</span>
+                            </div>
+                            <p class="text-sm text-gray-600">Kitab fiqih mazhab Hanbali yang sangat luas pembahasannya.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="mazhab" class="tab-content">
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-school"></i> Mazhab Fiqih dalam Islam</h2>
+                        <p class="article-text">
+                            Dalam sejarah Islam, terdapat beberapa mazhab fiqih yang berkembang. Empat mazhab yang paling terkenal dan masih diikuti hingga sekarang adalah:
+                        </p>
+                        
+                        <div class="hadith-box">
+                            <p class="arabic">قَالَ رَسُولُ اللَّهِ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ: «اخْتِلَافُ أُمَّتِي رَحْمَةٌ»</p>
+                            <p class="mt-2">Rasulullah SAW bersabda: "Perbedaan pendapat di antara umatku adalah rahmat." (HR. Baihaqi)</p>
+                            <span class="hadith-number">2</span>
+                        </div>
+                    </div>
+                    
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-users"></i> Empat Mazhab Utama</h2>
+                        
+                        <div class="bg-blue-50 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-blue-800">1. Mazhab Hanafi</h3>
+                            <p class="text-sm mt-1">Didirikan oleh Imam Abu Hanifah (w. 150 H). Ciri khasnya adalah banyak menggunakan qiyas dan istihsan. Dominan di Turki, Asia Tengah, India, Pakistan.</p>
+                        </div>
+                        
+                        <div class="bg-blue-100 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-blue-800">2. Mazhab Maliki</h3>
+                            <p class="text-sm mt-1">Didirikan oleh Imam Malik bin Anas (w. 179 H). Ciri khasnya adalah menggunakan amalan penduduk Madinah sebagai sumber hukum. Dominan di Afrika Utara dan Barat.</p>
+                        </div>
+                        
+                        <div class="bg-blue-50 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-blue-800">3. Mazhab Syafi'i</h3>
+                            <p class="text-sm mt-1">Didirikan oleh Imam Syafi'i (w. 204 H). Ciri khasnya adalah metodologi yang sistematis dalam ushul fiqih. Dominan di Asia Tenggara, Mesir, dan Yaman.</p>
+                        </div>
+                        
+                        <div class="bg-blue-100 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-blue-800">4. Mazhab Hanbali</h3>
+                            <p class="text-sm mt-1">Didirikan oleh Imam Ahmad bin Hanbal (w. 241 H). Ciri khasnya adalah ketat dalam berpegang pada nash. Dominan di Arab Saudi dan negara Teluk.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="pembagian" class="tab-content">
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-sitemap"></i> Pembagian Fiqih</h2>
+                        <p class="article-text">
+                            Fiqih Islam mencakup berbagai aspek kehidupan manusia yang dibagi menjadi beberapa bagian utama:
+                        </p>
+                        
+                        <div class="grid grid-cols-2 gap-3 mt-3">
+                            <div class="bg-blue-50 p-3 rounded-lg">
+                                <h3 class="font-bold text-blue-800"><i class="fas fa-pray"></i> Ibadah</h3>
+                                <p class="text-sm mt-1">Tata cara shalat, puasa, zakat, haji, dan ibadah mahdhah lainnya.</p>
+                            </div>
+                            <div class="bg-blue-100 p-3 rounded-lg">
+                                <h3 class="font-bold text-blue-800"><i class="fas fa-handshake"></i> Muamalah</h3>
+                                <p class="text-sm mt-1">Hukum jual beli, sewa-menyewa, hutang-piutang, dan transaksi ekonomi.</p>
+                            </div>
+                            <div class="bg-blue-50 p-3 rounded-lg">
+                                <h3 class="font-bold text-blue-800"><i class="fas fa-heart"></i> Munakahat</h3>
+                                <p class="text-sm mt-1">Hukum pernikahan, talak, waris, wasiat, dan hubungan keluarga.</p>
+                            </div>
+                            <div class="bg-blue-100 p-3 rounded-lg">
+                                <h3 class="font-bold text-blue-800"><i class="fas fa-gavel"></i> Jinayat</h3>
+                                <p class="text-sm mt-1">Hukum pidana Islam seperti qishash, diyat, dan hudud.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-balance-scale"></i> Tingkatan Hukum Fiqih</h2>
+                        
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mt-3">
+                            <h3 class="font-bold text-blue-800 flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i> Wajib (Fardhu)
+                            </h3>
+                            <p class="text-sm mt-1">Perbuatan yang harus dilakukan, jika ditinggalkan berdosa. Contoh: shalat lima waktu, puasa Ramadhan.</p>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mt-3">
+                            <h3 class="font-bold text-blue-800 flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i> Sunnah (Mustahab)
+                            </h3>
+                            <p class="text-sm mt-1">Perbuatan yang dianjurkan, jika dilakukan dapat pahala, jika ditinggalkan tidak berdosa. Contoh: shalat sunnah, puasa Senin-Kamis.</p>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mt-3">
+                            <h3 class="font-bold text-blue-800 flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i> Mubah (Jaiz)
+                            </h3>
+                            <p class="text-sm mt-1">Perbuatan yang boleh dilakukan atau ditinggalkan tanpa konsekuensi pahala atau dosa. Contoh: makan, minum, tidur.</p>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mt-3">
+                            <h3 class="font-bold text-blue-800 flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i> Makruh
+                            </h3>
+                            <p class="text-sm mt-1">Perbuatan yang sebaiknya dihindari, jika ditinggalkan dapat pahala, jika dilakukan tidak berdosa. Contoh: makan bawang sebelum ke masjid.</p>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mt-3">
+                            <h3 class="font-bold text-blue-800 flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i> Haram
+                            </h3>
+                            <p class="text-sm mt-1">Perbuatan yang harus dihindari, jika dilakukan berdosa. Contoh: zina, mencuri, riba.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="keutamaan" class="tab-content">
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-crown"></i> Keutamaan Mempelajari Fiqih</h2>
+                        <p class="article-text">
+                            Mempelajari ilmu fiqih memiliki banyak keutamaan dalam Islam:
+                        </p>
+                        
+                        <div class="bg-blue-50 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-blue-800">1. Tanda Kebaikan dari Allah</h3>
+                            <p class="text-sm mt-1">"Barangsiapa yang Allah kehendaki kebaikan padanya, niscaya Allah akan memahamkannya dalam urusan agama." (HR. Bukhari dan Muslim)</p>
+                        </div>
+                        
+                        <div class="bg-blue-100 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-blue-800">2. Jalan Menuju Surga</h3>
+                            <p class="text-sm mt-1">"Barangsiapa menempuh jalan untuk mencari ilmu, maka Allah akan memudahkan baginya jalan ke surga." (HR. Muslim)</p>
+                        </div>
+                        
+                        <div class="bg-blue-50 p-4 rounded-lg mt-3">
+                            <h3 class="font-bold text-blue-800">3. Kemudahan dalam Beribadah</h3>
+                            <p class="text-sm mt-1">Dengan memahami fiqih, seorang muslim dapat beribadah dengan benar sesuai tuntunan syariat.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="article-section">
+                        <h2 class="section-title"><i class="fas fa-lightbulb"></i> Tips Mempelajari Fiqih</h2>
+                        
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mt-3">
+                            <h3 class="font-bold text-blue-800 flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i> Mulai dari Dasar
+                            </h3>
+                            <p class="text-sm mt-1">Pelajari dasar-dasar fiqih seperti thaharah (bersuci) dan shalat sebelum mempelajari yang lebih kompleks.</p>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mt-3">
+                            <h3 class="font-bold text-blue-800 flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i> Pilih Mazhab Tertentu
+                            </h3>
+                            <p class="text-sm mt-1">Untuk pemula, sebaiknya mempelajari satu mazhab tertentu terlebih dahulu sebelum membandingkan dengan mazhab lain.</p>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mt-3">
+                            <h3 class="font-bold text-blue-800 flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i> Belajar dari Guru
+                            </h3>
+                            <p class="text-sm mt-1">Carilah guru yang kompeten untuk mempelajari fiqih agar tidak salah dalam memahami dalil-dalil.</p>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mt-3">
+                            <h3 class="font-bold text-blue-800 flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i> Amalkan Ilmunya
+                            </h3>
+                            <p class="text-sm mt-1">Ilmu fiqih harus diamalkan dalam kehidupan sehari-hari agar bermanfaat.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav bg-white p-2 flex justify-around items-center">
+            <a href="index2.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-home nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Beranda</span>
+            </a>
+            <a href="video.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-video nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Video</span>
+            </a>
+            <a href="kategori materi.html" class="flex flex-col items-center text-primary">
+                <i class="fas fa-quran nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Fiqih</span>
+            </a>
+            <a href="kategori soal.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-book-open nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Soal</span>
+            </a>
+            <a href="profil.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-user nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Profil</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        // Tab functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons and contents
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Show corresponding content
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Bottom nav interaction
+            const navItems = document.querySelectorAll('.nav-icon');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    navItems.forEach(nav => {
+                        nav.classList.remove('active');
+                        nav.parentElement.classList.remove('text-primary');
+                        nav.parentElement.classList.add('text-gray-500');
+                    });
+                    
+                    this.classList.add('active');
+                    this.parentElement.classList.add('text-primary');
+                    this.parentElement.classList.remove('text-gray-500');
+                });
+            });
+            
+            // Set current page as active
+            document.querySelector('.bottom-nav a[href="kategori materi.html"] i').classList.add('active');
+            document.querySelector('.bottom-nav a[href="kategori materi.html"]').classList.add('text-primary');
+            document.querySelector('.bottom-nav a[href="kategori materi.html"]').classList.remove('text-gray-500');
+        });
+    </script>
+</body>
+</html>

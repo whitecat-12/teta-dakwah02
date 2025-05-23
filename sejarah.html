@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teta Dakwa - Sejarah Islam</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #38b2ac;
+            --secondary: #0e7490;
+            --accent: #f59e0b;
+            --quran: #10b981;
+            --fiqh: #3b82f6;
+            --hadith: #8b5cf6;
+            --islamic: #ec4899;
+        }
+        
+        body {
+            font-family: 'Baloo 2', cursive;
+            background-color: #f8fafc;
+        }
+        
+        .app-container {
+            max-width: 414px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 414px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            background: white;
+            z-index: 10;
+        }
+        
+        .nav-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .nav-icon.active {
+            transform: translateY(-10px);
+            color: var(--primary);
+        }
+        
+        .floating-btn {
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .bounce {
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+        
+        .islamic-pattern {
+            background-image: radial-gradient(rgba(56, 178, 172, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        .section-content {
+            display: none;
+            padding: 16px;
+            background: white;
+            border-radius: 12px;
+            margin-top: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        
+        .active-section {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .progress-bar {
+            height: 6px;
+            border-radius: 3px;
+            background-color: #e5e7eb;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+        
+        .sticker {
+            position: absolute;
+            right: -10px;
+            top: -10px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+            transform: rotate(15deg);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .app-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .app-logo-icon {
+            background: linear-gradient(135deg, #38b2ac, #0e7490);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+        }
+        
+        .app-name {
+            font-weight: 700;
+            font-size: 1.25rem;
+            background: linear-gradient(135deg, #38b2ac, #0e7490);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .material-category {
+            transition: all 0.3s ease;
+            border-left: 4px solid;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .material-category:hover {
+            transform: translateX(5px);
+        }
+        
+        .material-category::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+            z-index: 1;
+        }
+        
+        .material-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .material-category:hover .material-icon {
+            transform: scale(1.1);
+        }
+        
+        .new-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ef4444;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .daily-tip {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border-left: 4px solid var(--primary);
+        }
+        
+        /* Article Styles */
+        .article-header {
+            background: linear-gradient(135deg, #38b2ac, #0e7490);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .article-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .article-meta {
+            display: flex;
+            align-items: center;
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+        
+        .article-meta i {
+            margin-right: 0.3rem;
+        }
+        
+        .article-meta span {
+            margin-right: 1rem;
+        }
+        
+        .article-content {
+            padding: 0 1rem 5rem;
+        }
+        
+        .article-section {
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #0e7490;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 0.5rem;
+        }
+        
+        .article-text {
+            line-height: 1.6;
+            text-align: justify;
+            margin-bottom: 1rem;
+        }
+        
+        .highlight-box {
+            background-color: #f0fdfa;
+            border-left: 4px solid #0e7490;
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.3rem;
+            width: 1rem;
+            height: 1rem;
+            background-color: #0e7490;
+            border-radius: 50%;
+        }
+        
+        .timeline-item:after {
+            content: '';
+            position: absolute;
+            left: 0.5rem;
+            top: 1.3rem;
+            width: 2px;
+            height: calc(100% - 1rem);
+            background-color: #0e7490;
+        }
+        
+        .timeline-item:last-child:after {
+            display: none;
+        }
+        
+        .timeline-date {
+            font-weight: 600;
+            color: #0e7490;
+        }
+        
+        .timeline-content {
+            margin-top: 0.3rem;
+        }
+        
+        .article-image {
+            width: 100%;
+            border-radius: 8px;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            color: #0e7490;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .back-button i {
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile App Container -->
+    <div class="app-container">
+        <!-- App Header -->
+        <header class="bg-gradient-to-r from-primary to-secondary p-4 text-white">
+            <div class="flex justify-between items-center">
+                <div class="app-logo">
+                    <div class="app-logo-icon">
+                        <i class="fas fa-mosque"></i>
+                    </div>
+                    <h1 class="app-name">TETA DAKWA</h1>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-bell"></i>
+                    <i class="fas fa-user-circle text-xl"></i>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Article Content -->
+        <main class="pb-20">
+            <div class="article-header">
+                <a href="javascript:history.back()" class="back-button">
+                    <i class="fas fa-arrow-left"></i> Kembali
+                </a>
+                <h1 class="article-title">Sejarah Perkembangan Islam: Dari Mekah ke Seluruh Dunia</h1>
+                <div class="article-meta">
+                    <span><i class="fas fa-book-open"></i> Sejarah Islam</span>
+                    <span><i class="fas fa-clock"></i> 10 min baca</span>
+                    <span><i class="fas fa-calendar"></i> 12 Juni 2024</span>
+                </div>
+            </div>
+            
+            <div class="article-content">
+                <div class="article-section">
+                    <h2 class="section-title"><i class="fas fa-mosque"></i> Pendahuluan</h2>
+                    <p class="article-text">
+                        Islam adalah agama yang lahir di Jazirah Arab pada abad ke-7 Masehi. Dalam waktu relatif singkat, 
+                        Islam berkembang pesat menjadi salah satu peradaban terbesar dunia. Artikel ini akan mengulas 
+                        sejarah perkembangan Islam dari masa Nabi Muhammad SAW hingga menjadi peradaban global.
+                    </p>
+                    
+                    <div class="highlight-box">
+                        <p>"Sesungguhnya agama (yang diridhai) di sisi Allah hanyalah Islam." (QS. Ali Imran: 19)</p>
+                    </div>
+                </div>
+                
+                <div class="article-section">
+                    <h2 class="section-title"><i class="fas fa-star"></i> Masa Kenabian (610-632 M)</h2>
+                    <p class="article-text">
+                        Sejarah Islam dimulai dengan turunnya wahyu pertama kepada Nabi Muhammad SAW di Gua Hira pada tahun 
+                        610 M. Selama 23 tahun berikutnya, Islam berkembang dari agama kecil di Mekah menjadi kekuatan utama 
+                        di Jazirah Arab.
+                    </p>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">610 M</div>
+                        <div class="timeline-content">
+                            Turunnya wahyu pertama (QS. Al-Alaq: 1-5) di Gua Hira, menandai awal kenabian Muhammad SAW.
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">622 M</div>
+                        <div class="timeline-content">
+                            Hijrah Nabi Muhammad SAW dari Mekah ke Madinah, menjadi awal kalender Hijriyah dan 
+                            pembentukan masyarakat Islam pertama.
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">630 M</div>
+                        <div class="timeline-content">
+                            Fathu Makkah (Pembebasan Mekah), dimana Nabi Muhammad SAW kembali ke Mekah dengan 
+                            10.000 pasukan dan membersihkan Ka'bah dari berhala.
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">632 M</div>
+                        <div class="timeline-content">
+                            Wafatnya Nabi Muhammad SAW di Madinah setelah menyempurnakan agama Islam dan 
+                            menyatukan Jazirah Arab di bawah panji Islam.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="article-section">
+                    <h2 class="section-title"><i class="fas fa-chess-queen"></i> Masa Khulafaur Rasyidin (632-661 M)</h2>
+                    <p class="article-text">
+                        Setelah wafatnya Nabi Muhammad SAW, kepemimpinan umat Islam dilanjutkan oleh empat khalifah 
+                        pertama yang dikenal sebagai Khulafaur Rasyidin (Para Pemimpin yang Diberi Petunjuk).
+                    </p>
+                    
+                    <div class="flex overflow-x-auto gap-4 py-2">
+                        <div class="bg-blue-50 p-4 rounded-lg min-w-[200px]">
+                            <h3 class="font-bold text-blue-800">Abu Bakar Ash-Shiddiq</h3>
+                            <p class="text-sm">(632-634 M)</p>
+                            <p class="text-sm mt-2">Mengatasi gerakan murtad dan memulai kodifikasi Al-Quran</p>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg min-w-[200px]">
+                            <h3 class="font-bold text-green-800">Umar bin Khattab</h3>
+                            <p class="text-sm">(634-644 M)</p>
+                            <p class="text-sm mt-2">Ekspansi Islam ke Persia dan Byzantium, pembentukan sistem administrasi</p>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-lg min-w-[200px]">
+                            <h3 class="font-bold text-purple-800">Utsman bin Affan</h3>
+                            <p class="text-sm">(644-656 M)</p>
+                            <p class="text-sm mt-2">Penyatuan mushaf Al-Quran, perluasan wilayah Islam</p>
+                        </div>
+                        <div class="bg-red-50 p-4 rounded-lg min-w-[200px]">
+                            <h3 class="font-bold text-red-800">Ali bin Abi Thalib</h3>
+                            <p class="text-sm">(656-661 M)</p>
+                            <p class="text-sm mt-2">Menghadapi fitnah besar dan perang saudara</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="article-section">
+                    <h2 class="section-title"><i class="fas fa-landmark"></i> Masa Kekhalifahan Umayyah (661-750 M)</h2>
+                    <p class="article-text">
+                        Dinasti Umayyah memindahkan ibukota dari Madinah ke Damaskus dan melanjutkan ekspansi Islam 
+                        ke berbagai penjuru dunia. Pada masa ini, Islam mencapai Spanyol di Barat dan India di Timur.
+                    </p>
+                    
+                    <div class="highlight-box">
+                        <p>Pada masa Khalifah Al-Walid I (705-715 M), Islam mencapai puncak ekspansi teritorialnya dengan penaklukan Spanyol oleh Thariq bin Ziyad (711 M) dan perluasan ke Asia Tengah.</p>
+                    </div>
+                    
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Umayyad750ADloc.png/800px-Umayyad750ADloc.png" alt="Peta Kekhalifahan Umayyah" class="article-image">
+                </div>
+                
+                <div class="article-section">
+                    <h2 class="section-title"><i class="fas fa-book"></i> Masa Keemasan Abbasiyah (750-1258 M)</h2>
+                    <p class="article-text">
+                        Dinasti Abbasiyah memindahkan ibukota ke Baghdad dan membawa Islam ke masa keemasan dalam 
+                        bidang sains, filsafat, seni, dan sastra. Baitul Hikmah menjadi pusat ilmu pengetahuan dunia.
+                    </p>
+                    
+                    <p class="article-text">
+                        Tokoh-tokoh besar Islam bermunculan pada masa ini:
+                    </p>
+                    
+                    <ul class="list-disc pl-5 space-y-2 mt-2">
+                        <li><strong>Ibnu Sina</strong> - Bapak Kedokteran Modern</li>
+                        <li><strong>Al-Khawarizmi</strong> - Penemu Aljabar</li>
+                        <li><strong>Al-Farabi</strong> - Filsuf Islam</li>
+                        <li><strong>Al-Ghazali</strong> - Hujjatul Islam</li>
+                        <li><strong>Ibnu Khaldun</strong> - Bapak Sosiologi</li>
+                    </ul>
+                </div>
+                
+                <div class="article-section">
+                    <h2 class="section-title"><i class="fas fa-globe-asia"></i> Penyebaran Islam ke Nusantara</h2>
+                    <p class="article-text">
+                        Islam masuk ke Nusantara melalui jalur perdagangan pada abad ke-7 hingga ke-13 M. Proses Islamisasi 
+                        berlangsung damai melalui para ulama dan pedagang muslim. Wali Songo memainkan peran penting dalam 
+                        penyebaran Islam di Jawa pada abad ke-15.
+                    </p>
+                    
+                    <div class="bg-yellow-50 p-4 rounded-lg mt-3">
+                        <h3 class="font-bold text-yellow-800">Teori Masuknya Islam ke Nusantara:</h3>
+                        <ol class="list-decimal pl-5 space-y-1 mt-2">
+                            <li>Teori Gujarat (abad ke-13)</li>
+                            <li>Teori Arab (abad ke-7)</li>
+                            <li>Teori Persia (abad ke-11)</li>
+                            <li>Teori Cina (abad ke-9)</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="article-section">
+                    <h2 class="section-title"><i class="fas fa-lightbulb"></i> Kesimpulan</h2>
+                    <p class="article-text">
+                        Sejarah Islam menunjukkan perkembangan yang luar biasa dari komunitas kecil di Mekah menjadi 
+                        peradaban global. Kunci keberhasilannya terletak pada ajaran Islam yang universal, toleransi 
+                        terhadap budaya lokal, dan semangat menuntut ilmu.
+                    </p>
+                    
+                    <div class="bg-green-50 p-4 rounded-lg mt-3">
+                        <h3 class="font-bold text-green-800">Pelajaran dari Sejarah Islam:</h3>
+                        <ul class="list-disc pl-5 space-y-1 mt-2">
+                            <li>Pentingnya persatuan umat</li>
+                            <li>Nilai toleransi dalam berdakwah</li>
+                            <li>Semangat menuntut ilmu</li>
+                            <li>Keseimbangan antara dunia dan akhirat</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav bg-white p-2 flex justify-around items-center">
+            <a href="index2.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-home nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Beranda</span>
+            </a>
+            <a href="video.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-video nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Video</span>
+            </a>
+            <a href="kategori materi.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-quran nav-icon text-xl active"></i>
+                <span class="text-xs mt-1">Materi Harian</span>
+            </a>
+            <a href="kategori soal.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-book-open nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Soal Harian</span>
+            </a>
+            <a href="profil.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-user nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Profil</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        // Simple interaction for bottom nav
+        document.addEventListener('DOMContentLoaded', function() {
+            const navItems = document.querySelectorAll('.nav-icon');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Remove active class from all
+                    navItems.forEach(nav => {
+                        nav.classList.remove('active');
+                        nav.parentElement.classList.remove('text-primary');
+                        nav.parentElement.classList.add('text-gray-500');
+                    });
+                    
+                    // Add to clicked
+                    this.classList.add('active');
+                    this.parentElement.classList.add('text-primary');
+                    this.parentElement.classList.remove('text-gray-500');
+                });
+            });
+            
+            // Set current page as active
+            document.querySelector('.bottom-nav a[href="materi.html"] i').classList.add('active');
+            document.querySelector('.bottom-nav a[href="materi.html"]').classList.add('text-primary');
+            document.querySelector('.bottom-nav a[href="materi.html"]').classList.remove('text-gray-500');
+        });
+    </script>
+</body>
+</html>
