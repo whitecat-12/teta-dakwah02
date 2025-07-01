@@ -105,6 +105,7 @@
       <p>Username: <span id="usernameDisplay"></span></p>
       <input type="text" id="usernameInput" placeholder="Ubah username" />
       <button id="updateUsernameBtn">Update Username</button>
+	  <button id="goToNextBtn">Kembali ke Beranda</button>
       <button id="logoutBtn">Logout</button>
     </div>
   </div>
@@ -227,30 +228,30 @@ registerBtn.addEventListener("click", async () => {
 
 
     // Update username di Firestore dan Auth profile
-    updateUsernameBtn.addEventListener("click", async () => {
-      if (!currentUser) return alert("Kamu harus login dulu!");
-      const newUsername = usernameInput.value.trim();
-      if (!newUsername) return alert("Username tidak boleh kosong!");
-      try {
-        const docRef = doc(db, "users", currentUser.uid);
-        await setDoc(docRef, { username: newUsername }, { merge: true });
-        await updateProfile(currentUser, { displayName: newUsername });
-        usernameDisplay.textContent = newUsername;
-        alert("Username berhasil diperbarui!");
-      } catch (error) {
-        alert("Gagal update username: " + error.message);
-      }
-    });
+    const goToNextBtn = document.getElementById("goToNextBtn");
 
-    // Logout user
-    logoutBtn.addEventListener("click", async () => {
-      try {
-        await signOut(auth);
-        alert("Berhasil logout");
-      } catch (error) {
-        alert("Error saat logout: " + error.message);
-      }
-    });
+// Fungsi update username (tidak berubah)
+updateUsernameBtn.addEventListener("click", async () => {
+  if (!currentUser) return alert("Kamu harus login dulu!");
+  const newUsername = usernameInput.value.trim();
+  if (!newUsername) return alert("Username tidak boleh kosong!");
+
+  try {
+    const docRef = doc(db, "users", currentUser.uid);
+    await setDoc(docRef, { username: newUsername }, { merge: true });
+    await updateProfile(currentUser, { displayName: newUsername });
+    usernameDisplay.textContent = newUsername;
+    alert("Username berhasil diperbarui!");
+  } catch (error) {
+    alert("Gagal update username: " + error.message);
+  }
+});
+
+// Tombol untuk lanjut ke halaman berikutnya
+goToNextBtn.addEventListener("click", () => {
+  window.location.href = "index2.html";
+});
+
   </script>
 </body>
 </html>
