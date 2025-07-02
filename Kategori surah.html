@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juz Al-Quran - Kategori Surah</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+            min-height: 100vh;
+        }
+        
+        .arabic-font {
+            font-family: 'Amiri', serif;
+        }
+        
+        .juz-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .juz-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 100%);
+            z-index: 1;
+        }
+        
+        .juz-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .gradient-header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            box-shadow: 0 4px 20px rgba(30, 58, 138, 0.3);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        
+        .juz-number {
+            position: relative;
+            z-index: 2;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.2);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .surah-list {
+            max-height: 120px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.5) transparent;
+        }
+        
+        .surah-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .surah-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .surah-list::-webkit-scrollbar-thumb {
+            background-color: rgba(255,255,255,0.5);
+            border-radius: 20px;
+        }
+        
+        .floating-action-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            z-index: 50;
+            transition: all 0.3s ease;
+        }
+        
+        .floating-action-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+        }
+        
+        .back-to-top {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            z-index: 50;
+            transition: all 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .back-to-top.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .back-to-top:hover {
+            transform: translateY(-3px);
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px 0;
+        }
+        
+        
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="gradient-header text-white py-6 shadow-lg sticky top-0 z-40">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center mb-4 md:mb-0">
+                    <div class="bg-white bg-opacity-20 p-2 rounded-lg mr-3">
+                        <i class="fas fa-quran text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl md:text-3xl font-bold">Surah Al-Quran</h1>
+                        <p class="text-xs opacity-80">Susunan Juz dan Surah dalam Al-Qur’an</p>
+                    </div>
+              </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="text-center mb-12">
+            <div class="inline-block bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full mb-3 font-medium">
+                <i class="fas fa-info-circle mr-1"></i> 30 Juz Al-Quran
+            </div>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-3">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto text-lg">
+              Dengan menyebut nama Allah Yang Maha Pengasih lagi Maha Penyayang. Di halaman ini, Anda dapat menemukan pembagian Juz dalam Al-Qur'an beserta surah-surah di dalamnya, untuk mempermudah tilawah dan memahami susunan Al-Qur'an secara terstruktur.
+            </p>
+
+        </div>
+
+        <!-- Stats -->
+       
+        <!-- Juz Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="juz-container">
+            <!-- Juz cards will be inserted here by JavaScript -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="empty-state hidden">
+            <div class="max-w-md mx-auto">
+                <div class="bg-gray-100 p-6 rounded-full inline-block mb-4">
+                    <i class="fas fa-search text-gray-400 text-3xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-700 mb-2">Juz tidak ditemukan</h3>
+                <p class="text-gray-500 mb-4">Coba gunakan kata kunci yang berbeda atau lihat semua juz di bawah ini</p>
+                <button id="reset-search" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
+                    Tampilkan Semua Juz
+                </button>
+            </div>
+        </div>
+    </main>
+    
+       <!-- Bottom Navigation -->
+        
+   
+        
+      <!-- Konten utama -->
+      <div class="content-wrapper pb-20">
+        <!-- Konten halaman di sini -->
+        <div class="p-4">
+          
+          <!-- Tambah banyak konten di sini untuk uji scroll -->
+        </div>
+      </div>
+    
+      <!-- Bottom Navigation -->
+      <nav class="bottom-nav fixed bottom-0 left-0 w-full bg-white p-2 flex justify-around items-center shadow-md z-50">
+            <a href="index.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-home nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Beranda</span>
+            </a>
+            <a href="video.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-video nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Video</span>
+            </a>
+            <a href="kategori materi.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-quran nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Materi Harian</span>
+            </a>
+            <a href="kategori soal.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-book-open nav-icon text-xl active"></i>
+                <span class="text-xs mt-1">Soal Harian</span>
+            </a>
+            <a href="profil.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-user nav-icon text-xl"></i>
+                <span class="text-xs mt-1">Profil</span>
+            </a>
+        </nav>
+    
+
+
+
+
+    <script>
+        // Juz data with more details
+        const juzData = [
+            { 
+                number: 1, 
+                surahs: ["Al-Fatihah (1)", "Al-Baqarah (2:1-141)"], 
+                color: "bg-gradient-to-br from-blue-600 to-blue-800",
+                ayahCount: 148,
+                revelation: "Madaniyah & Makkiyah",
+                pages: "1-21"
+            },
+            { 
+                number: 2, 
+                surahs: ["Al-Baqarah (2:142-252)"], 
+                color: "bg-gradient-to-br from-green-600 to-green-800",
+                ayahCount: 111,
+                revelation: "Madaniyah",
+                pages: "22-39"
+            },
+            { 
+                number: 3, 
+                surahs: ["Al-Baqarah (2:253-286)", "Ali 'Imran (3:1-91)"], 
+                color: "bg-gradient-to-br from-purple-600 to-purple-800",
+                ayahCount: 125,
+                revelation: "Madaniyah",
+                pages: "40-58"
+            },
+            { 
+                number: 4, 
+                surahs: ["Ali 'Imran (3:92-200)", "An-Nisa (4:1-23)"], 
+                color: "bg-gradient-to-br from-yellow-600 to-yellow-800",
+                ayahCount: 132,
+                revelation: "Madaniyah",
+                pages: "59-77"
+            },
+            { 
+                number: 5, 
+                surahs: ["An-Nisa (4:24-147)"], 
+                color: "bg-gradient-to-br from-red-600 to-red-800",
+                ayahCount: 124,
+                revelation: "Madaniyah",
+                pages: "78-95"
+            },
+            { 
+                number: 6, 
+                surahs: ["An-Nisa (4:148-176)", "Al-Ma'idah (5:1-81)"], 
+                color: "bg-gradient-to-br from-indigo-600 to-indigo-800",
+                ayahCount: 110,
+                revelation: "Madaniyah",
+                pages: "96-114"
+            },
+            { 
+                number: 7, 
+                surahs: ["Al-Ma'idah (5:82-120)", "Al-An'am (6:1-110)"], 
+                color: "bg-gradient-to-br from-pink-600 to-pink-800",
+                ayahCount: 149,
+                revelation: "Madaniyah & Makkiyah",
+                pages: "115-142"
+            },
+            { 
+                number: 8, 
+                surahs: ["Al-An'am (6:111-165)", "Al-A'raf (7:1-87)"], 
+                color: "bg-gradient-to-br from-teal-600 to-teal-800",
+                ayahCount: 142,
+                revelation: "Makkiyah",
+                pages: "143-168"
+            },
+            { 
+                number: 9, 
+                surahs: ["Al-A'raf (7:88-206)", "Al-Anfal (8:1-40)"], 
+                color: "bg-gradient-to-br from-orange-600 to-orange-800",
+                ayahCount: 159,
+                revelation: "Makkiyah & Madaniyah",
+                pages: "169-188"
+            },
+            { 
+                number: 10, 
+                surahs: ["Al-Anfal (8:41-75)", "At-Taubah (9:1-92)"], 
+                color: "bg-gradient-to-br from-cyan-600 to-cyan-800",
+                ayahCount: 127,
+                revelation: "Madaniyah",
+                pages: "189-207"
+            },
+            { 
+                number: 11, 
+                surahs: ["At-Taubah (9:93-129)", "Yunus (10:1-109)", "Hud (11:1-5)"], 
+                color: "bg-gradient-to-br from-lime-600 to-lime-800",
+                ayahCount: 151,
+                revelation: "Madaniyah & Makkiyah",
+                pages: "208-236"
+            },
+            { 
+                number: 12, 
+                surahs: ["Hud (11:6-123)", "Yusuf (12:1-52)"], 
+                color: "bg-gradient-to-br from-amber-600 to-amber-800",
+                ayahCount: 170,
+                revelation: "Makkiyah",
+                pages: "237-259"
+            },
+            { 
+                number: 13, 
+                surahs: ["Yusuf (12:53-111)", "Ar-Ra'd (13:1-43)", "Ibrahim (14:1-52)"], 
+                color: "bg-gradient-to-br from-emerald-600 to-emerald-800",
+                ayahCount: 154,
+                revelation: "Makkiyah & Madaniyah",
+                pages: "260-281"
+            },
+            { 
+                number: 14, 
+                surahs: ["Al-Hijr (15:1-99)", "An-Nahl (16:1-128)"], 
+                color: "bg-gradient-to-br from-violet-600 to-violet-800",
+                ayahCount: 227,
+                revelation: "Makkiyah",
+                pages: "282-302"
+            },
+            { 
+                number: 15, 
+                surahs: ["Al-Isra (17:1-111)", "Al-Kahf (18:1-74)"], 
+                color: "bg-gradient-to-br from-fuchsia-600 to-fuchsia-800",
+                ayahCount: 185,
+                revelation: "Makkiyah",
+                pages: "303-321"
+            },
+            { 
+                number: 16, 
+                surahs: ["Al-Kahf (18:75-110)", "Maryam (19:1-98)", "Ta-Ha (20:1-135)"], 
+                color: "bg-gradient-to-br from-rose-600 to-rose-800",
+                ayahCount: 269,
+                revelation: "Makkiyah",
+                pages: "322-351"
+            },
+            { 
+                number: 17, 
+                surahs: ["Al-Anbiya (21:1-112)", "Al-Hajj (22:1-78)"], 
+                color: "bg-gradient-to-br from-sky-600 to-sky-800",
+                ayahCount: 190,
+                revelation: "Makkiyah & Madaniyah",
+                pages: "352-371"
+            },
+            { 
+                number: 18, 
+                surahs: ["Al-Mu'minun (23:1-118)", "An-Nur (24:1-64)", "Al-Furqan (25:1-20)"], 
+                color: "bg-gradient-to-br from-amber-600 to-amber-800",
+                ayahCount: 202,
+                revelation: "Makkiyah & Madaniyah",
+                pages: "372-391"
+            },
+            { 
+                number: 19, 
+                surahs: ["Al-Furqan (25:21-77)", "Ash-Shu'ara (26:1-227)", "An-Naml (27:1-59)"], 
+                color: "bg-gradient-to-br from-green-600 to-green-800",
+                ayahCount: 265,
+                revelation: "Makkiyah",
+                pages: "392-415"
+            },
+            { 
+                number: 20, 
+                surahs: ["An-Naml (27:60-93)", "Al-Qasas (28:1-88)", "Al-Ankabut (29:1-45)"], 
+                color: "bg-gradient-to-br from-blue-600 to-blue-800",
+                ayahCount: 224,
+                revelation: "Makkiyah",
+                pages: "416-435"
+            },
+            { 
+                number: 21, 
+                surahs: ["Al-Ankabut (29:46-69)", "Ar-Rum (30:1-60)", "Luqman (31:1-34)", "As-Sajdah (32:1-30)"], 
+                color: "bg-gradient-to-br from-purple-600 to-purple-800",
+                ayahCount: 165,
+                revelation: "Makkiyah",
+                pages: "436-453"
+            },
+            { 
+                number: 22, 
+                surahs: ["Al-Ahzab (33:1-73)"], 
+                color: "bg-gradient-to-br from-red-600 to-red-800",
+                ayahCount: 73,
+                revelation: "Madaniyah",
+                pages: "454-461"
+            },
+            { 
+                number: 23, 
+                surahs: ["Al-Ahzab (33:74)", "Saba (34:1-54)", "Fatir (35:1-45)", "Ya-Sin (36:1-27)"], 
+                color: "bg-gradient-to-br from-yellow-600 to-yellow-800",
+                ayahCount: 146,
+                revelation: "Madaniyah & Makkiyah",
+                pages: "462-482"
+            },
+            { 
+                number: 24, 
+                surahs: ["Ya-Sin (36:28-83)", "As-Saffat (37:1-182)", "Sad (38:1-88)"], 
+                color: "bg-gradient-to-br from-indigo-600 to-indigo-800",
+                ayahCount: 263,
+                revelation: "Makkiyah",
+                pages: "483-502"
+            },
+            { 
+                number: 25, 
+                surahs: ["Az-Zumar (39:1-75)", "Ghafir (40:1-85)"], 
+                color: "bg-gradient-to-br from-pink-600 to-pink-800",
+                ayahCount: 160,
+                revelation: "Makkiyah",
+                pages: "503-521"
+            },
+            { 
+                number: 26, 
+                surahs: ["Fussilat (41:1-54)", "Ash-Shura (42:1-53)", "Az-Zukhruf (43:1-89)"], 
+                color: "bg-gradient-to-br from-teal-600 to-teal-800",
+                ayahCount: 196,
+                revelation: "Makkiyah",
+                pages: "522-541"
+            },
+            { 
+                number: 27, 
+                surahs: ["Ad-Dukhan (44:1-59)", "Al-Jathiyah (45:1-37)", "Al-Ahqaf (46:1-35)", "Muhammad (47:1-38)"], 
+                color: "bg-gradient-to-br from-orange-600 to-orange-800",
+                ayahCount: 169,
+                revelation: "Makkiyah & Madaniyah",
+                pages: "542-561"
+            },
+            { 
+                number: 28, 
+                surahs: ["Al-Fath (48:1-29)", "Al-Hujurat (49:1-18)", "Qaf (50:1-45)", "Adh-Dhariyat (51:1-30)"], 
+                color: "bg-gradient-to-br from-cyan-600 to-cyan-800",
+                ayahCount: 122,
+                revelation: "Madaniyah & Makkiyah",
+                pages: "562-581"
+            },
+            { 
+                number: 29, 
+                surahs: ["Adh-Dhariyat (51:31-60)", "At-Tur (52:1-49)", "An-Najm (53:1-62)", "Al-Qamar (54:1-55)", "Ar-Rahman (55:1-78)", "Al-Waqi'ah (56:1-96)"], 
+                color: "bg-gradient-to-br from-lime-600 to-lime-800",
+                ayahCount: 331,
+                revelation: "Makkiyah",
+                pages: "582-603"
+            },
+            { 
+                number: 30, 
+                surahs: ["Al-Hadid (57:1-29)", "Al-Mujadilah (58:1-22)", "Al-Hashr (59:1-24)", "Al-Mumtahanah (60:1-13)", "As-Saff (61:1-14)", "Al-Jumu'ah (62:1-11)", "Al-Munafiqun (63:1-11)", "At-Taghabun (64:1-18)", "At-Talaq (65:1-12)", "At-Tahrim (66:1-12)", "Al-Mulk (67:1-30)", "Al-Qalam (68:1-52)", "Al-Haqqah (69:1-52)", "Al-Ma'arij (70:1-44)", "Nuh (71:1-28)", "Al-Jinn (72:1-28)", "Al-Muzzammil (73:1-20)", "Al-Muddaththir (74:1-56)", "Al-Qiyamah (75:1-40)", "Al-Insan (76:1-31)", "Al-Mursalat (77:1-50)", "An-Naba (78:1-40)", "An-Nazi'at (79:1-46)", "'Abasa (80:1-42)", "At-Takwir (81:1-29)", "Al-Infitar (82:1-19)", "Al-Mutaffifin (83:1-36)", "Al-Inshiqaq (84:1-25)", "Al-Buruj (85:1-22)", "At-Tariq (86:1-17)", "Al-A'la (87:1-19)", "Al-Gashiyah (88:1-26)", "Al-Fajr (89:1-30)", "Al-Balad (90:1-20)", "Ash-Shams (91:1-15)", "Al-Layl (92:1-21)", "Ad-Duha (93:1-11)", "Ash-Sharh (94:1-8)", "At-Tin (95:1-8)", "Al-'Alaq (96:1-19)", "Al-Qadr (97:1-5)", "Al-Bayyinah (98:1-8)", "Az-Zalzalah (99:1-8)", "Al-'Adiyat (100:1-11)", "Al-Qari'ah (101:1-11)", "At-Takathur (102:1-8)", "Al-'Asr (103:1-3)", "Al-Humazah (104:1-9)", "Al-Fil (105:1-5)", "Quraysh (106:1-4)", "Al-Ma'un (107:1-7)", "Al-Kawthar (108:1-3)", "Al-Kafirun (109:1-6)", "An-Nasr (110:1-3)", "Al-Masad (111:1-5)", "Al-Ikhlas (112:1-4)", "Al-Falaq (113:1-5)", "An-Nas (114:1-6)"], 
+                color: "bg-gradient-to-br from-emerald-600 to-emerald-800",
+                ayahCount: 564,
+                revelation: "Madaniyah & Makkiyah",
+                pages: "604-604"
+            },
+                   
+                        
+        ];
+
+        // Function to render juz cards
+        function renderJuzCards(juzList) {
+            const container = document.getElementById('juz-container');
+            const emptyState = document.getElementById('empty-state');
+            
+            container.innerHTML = '';
+            
+            if (juzList.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            
+            emptyState.classList.add('hidden');
+            
+            juzList.forEach((juz, index) => {
+                const delay = index * 0.05;
+                const card = document.createElement('div');
+                card.className = `juz-card ${juz.color} text-white rounded-xl p-6 shadow-lg animate-fade-in-up relative overflow-hidden`;
+                card.style.animationDelay = `${delay}s`;
+                
+                card.innerHTML = `
+                    <div class="absolute -right-10 -bottom-10 opacity-10 text-8xl font-bold arabic-font">${juz.number}</div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold">Juz ${juz.number}</h3>
+                                <div class="flex items-center space-x-2 text-xs opacity-90 mt-1">
+                                    <span class="bg-white bg-opacity-20 px-2 py-0.5 rounded">${juz.revelation}</span>
+                                    <span class="bg-white bg-opacity-20 px-2 py-0.5 rounded">Halaman ${juz.pages}</span>
+                                </div>
+                            </div>
+                            <div class="juz-number">${juz.number}</div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <h4 class="font-semibold">Surah:</h4>
+                                <span class="text-xs bg-white bg-opacity-20 px-2 py-0.5 rounded">${juz.ayahCount} Ayat</span>
+                            </div>
+                            <div class="surah-list">
+                                <ul class="text-sm space-y-2 pr-2">
+                                    ${juz.surahs.map(surah => `<li class="flex items-start">
+                                        <i class="fas fa-bookmark mr-2 mt-1 text-xs opacity-70"></i>
+                                        <span class="opacity-90">${surah}</span>
+                                    </li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="flex-1 bg-white bg-opacity-20 hover:bg-opacity-30 transition py-2 rounded-lg text-sm font-medium flex items-center justify-center">
+                                <i class="fas fa-book-open mr-2"></i> Baca
+                            </button>
+                            <button class="w-10 bg-white bg-opacity-20 hover:bg-opacity-30 transition p-2 rounded-lg flex items-center justify-center" title="Detail">
+                                <i class="fas fa-info"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        // Initial render
+        renderJuzCards(juzData);
+
+       // Simple interaction for bottom nav
+        document.addEventListener('DOMContentLoaded', function() {
+            const navItems = document.querySelectorAll('.nav-icon');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Remove active class from all
+                    navItems.forEach(nav => {
+                        nav.classList.remove('active');
+                        nav.parentElement.classList.remove('text-primary');
+                        nav.parentElement.classList.add('text-gray-500');
+                    });
+                    
+                    // Add to clicked
+                    this.classList.add('active');
+                    this.parentElement.classList.add('text-primary');
+                    this.parentElement.classList.remove('text-gray-500');
+                });
+            });
+            
+            // Set current page as active
+            document.querySelector('.bottom-nav a[href="soal.html"] i').classList.add('active');
+            document.querySelector('.bottom-nav a[href="soal.html"]').classList.add('text-primary');
+            document.querySelector('.bottom-nav a[href="soal.html"]').classList.remove('text-gray-500');
+        });
+ 
+        
+    </script>
+        
+        
+     
+</body>
+</html>
