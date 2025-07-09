@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <title>Al-Qur'an Digital</title>
- 
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
  <style>
   @import url('https://fonts.googleapis.com/css2?family=Amiri&family=Roboto&display=swap');
 
@@ -94,6 +95,9 @@
 		body { padding: 1rem; }
 		.arab { font-size: 1.4rem; }
 	  }
+	  
+	  
+	  
 </style>
 
   
@@ -218,115 +222,194 @@
 	<option value="114">114. An-Nas</option>  
   </select>
 
-  <input type="text" id="search" placeholder="Cari kata di terjemahan (misal: sabar, nikmat)" />
-  <div id="hasil">Silakan pilih surah.</div>
+    <input type="text" id="search" placeholder="Cari kata di terjemahan (misal: sabar, nikmat)" />
+    <div id="hasil">Silakan pilih surah.</div>
 	
-
+	
   <script>
-    let ayatList = [];
+  let ayatList = [];
 
-    const surahSelect = document.getElementById("surahSelect");
-    const hasil = document.getElementById("hasil");
+  const surahSelect = document.getElementById("surahSelect");
+  const hasil = document.getElementById("hasil");
 
-    function loadSurah(nomorSurah) {
-      hasil.innerHTML = "🔄 Memuat...";
-      fetch(`${nomorSurah}.json`)
-        .then(res => res.json())
-        .then(json => {
-          const surah = json[nomorSurah];
-          const arab = surah.text;
-          const arti = surah.translations.id.text;
-          const tafsir = surah.tafsir?.id?.kemenag?.text || {};
+  // Tambahkan penanda di atas hasil jika belum ada
+  let penandaDiv = document.getElementById("penanda");
+  if (!penandaDiv) {
+    penandaDiv = document.createElement("div");
+    penandaDiv.id = "penanda";
+    penandaDiv.style.marginBottom = "1rem";
+    penandaDiv.style.fontWeight = "bold";
+    penandaDiv.style.color = "#2b7a3d";
+    hasil.parentNode.insertBefore(penandaDiv, hasil);
+  }
 
-          ayatList = Object.keys(arab).map(nomor => ({
-            nomor: nomor,
-            arab: arab[nomor],
-            arti: arti[nomor],
-            tafsir: tafsir[nomor] || "(Tafsir tidak tersedia)"
-          }));
+  function loadSurah(nomorSurah) {
+    hasil.innerHTML = "🔄 Memuat...";
+    fetch(`${nomorSurah}.json`)
+      .then(res => res.json())
+      .then(json => {
+        const surah = json[nomorSurah];
+        const arab = surah.text;
+        const arti = surah.translations.id.text;
+        const tafsir = surah.tafsir?.id?.kemenag?.text || {};
 
-          tampilkanAyat(ayatList);
-        })
-        .catch(err => {
-          hasil.innerHTML = "<p>❌ Gagal memuat surah. Pastikan file tersedia.</p>";
-        });
-    }
+        ayatList = Object.keys(arab).map(nomor => ({
+          nomor: nomor,
+          arab: arab[nomor],
+          arti: arti[nomor],
+          tafsir: tafsir[nomor] || "(Tafsir tidak tersedia)"
+        }));
+
+        tampilkanAyat(ayatList);
+        tampilkanPenanda();
+        scrollKePenanda();
+      })
+      .catch(err => {
+        hasil.innerHTML = "<p>❌ Gagal memuat surah. Pastikan file tersedia.</p>";
+      });
+  }
 
   function tampilkanAyat(daftar) {
-  const hasil = document.getElementById("hasil");
-  if (daftar.length === 0) {
-    hasil.innerHTML = "<p>❌ Tidak ada ayat yang cocok.</p>";
-    return;
-  }
+    if (daftar.length === 0) {
+      hasil.innerHTML = "<p>❌ Tidak ada ayat yang cocok.</p>";
+      return;
+    }
 
-  // Ambil nomor surah dari dropdown
-  const surahNum = String(surahSelect.value);
-  const audioURL = `https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/${surahNum}.mp3`;
+    const surahNum = String(surahSelect.value);
+    const audioURL = `https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/${surahNum}.mp3`;
 
-  // Audio player satu untuk satu surah
-  let audioPlayer = `
-    <div style="margin-bottom: 1rem;">
-      <audio controls style="width:100%">
-        <source src="${audioURL}" type="audio/mpeg">
-        Audio tidak tersedia.
-      </audio>
-    </div>
-  `;
+    // Ambil penanda spesifik surah
+    const penanda = JSON.parse(localStorage.getItem("penanda") || "{}");
+    const lastAyat = penanda[surahNum];
 
-  // Semua ayat ditampilkan
-  const ayatHTML = daftar.map((a, i) => `
-    <div class="ayat">
-      <div class="arab">${a.arab}</div>
-      <div class="arti"><strong>Artinya:</strong> ${a.arti}</div>
-
-      <button onclick="toggleTafsir(${i})" id="btn-${i}">➕ Lihat Tafsir</button>
-      <div class="tafsir" id="tafsir-${i}" style="display:none;">
-        <strong>Tafsir:</strong> ${a.tafsir}
+    let audioPlayer = `
+      <div style="margin-bottom: 1rem;">
+        <audio controls style="width:100%">
+          <source src="${audioURL}" type="audio/mpeg">
+          Audio tidak tersedia.
+        </audio>
       </div>
-      <div class="nomor">Ayat ${a.nomor}</div>
-    </div>
-  `).join("");
+    `;
 
-  hasil.innerHTML = audioPlayer + ayatHTML;
-}
+    const ayatHTML = daftar.map((a, i) => {
+      const isLastRead = a.nomor === lastAyat;
+      const iconClass = isLastRead ? "fas" : "far";
+      const iconColor = isLastRead ? "#f59e0b" : "#555";
 
+      return `
+        <div class="ayat" id="ayat-${a.nomor}">
+          <div class="arab">${a.arab}</div>
+          <div class="arti"><strong>Artinya:</strong> ${a.arti}</div>
 
+          <button onclick="toggleTafsir(${i})" id="btn-${i}">➕ Lihat Tafsir</button>
+          <button onclick="tandaiAyat('${a.nomor}')" id="mark-${a.nomor}" style="margin-left: 0.5rem;">
+            <i class="${iconClass} fa-bookmark" style="color:${iconColor};"></i> Tandai
+          </button>
 
-function toggleTafsir(i) {
-  const tafsirDiv = document.getElementById(`tafsir-${i}`);
-  const btn = document.getElementById(`btn-${i}`);
+          <div class="tafsir" id="tafsir-${i}" style="display:none;">
+            <strong>Tafsir:</strong> ${a.tafsir}
+          </div>
+          <div class="nomor">Ayat ${a.nomor}</div>
+        </div>
+      `;
+    }).join("");
 
-  if (tafsirDiv.style.display === "none") {
-    tafsirDiv.style.display = "block";
-    btn.innerText = "➖ Sembunyikan Tafsir";
+    hasil.innerHTML = audioPlayer + ayatHTML;
+  }
+
+  function tampilkanPenanda() {
+  const surah = surahSelect.value;
+  const penanda = JSON.parse(localStorage.getItem("penanda") || "{}");
+  const nomorAyat = penanda[surah];
+
+  if (nomorAyat) {
+    const namaSurah = surahSelect.options[surahSelect.selectedIndex].text;
+    const totalAyat = ayatList.length;
+    penandaDiv.innerText = `✅ Terakhir dibaca: ${surah}. ${namaSurah}, Ayat ${nomorAyat} dari ${totalAyat} ayat`;
   } else {
-    tafsirDiv.style.display = "none";
-    btn.innerText = "➕ Lihat Tafsir";
+    penandaDiv.innerText = "";
   }
 }
 
 
+  function scrollKePenanda() {
+    const surah = surahSelect.value;
+    const penanda = JSON.parse(localStorage.getItem("penanda") || "{}");
+    const nomorAyat = penanda[surah];
 
-    document.getElementById("search").addEventListener("input", e => {
-      const keyword = e.target.value.trim().toLowerCase();
-      if (!keyword || keyword.length < 2) {
-        tampilkanAyat(ayatList);
-        return;
+    if (nomorAyat) {
+      const ayatElem = document.getElementById(`ayat-${nomorAyat}`);
+      if (ayatElem) {
+        setTimeout(() => {
+          ayatElem.scrollIntoView({ behavior: "smooth", block: "center" });
+        }, 300);
       }
+    }
+  }
 
-      const hasilFilter = ayatList.filter(a =>
-        a.arti.toLowerCase().includes(keyword)
-      );
-      tampilkanAyat(hasilFilter);
+  function tandaiAyat(nomorAyat) {
+    const surah = surahSelect.value;
+    let penanda = JSON.parse(localStorage.getItem("penanda") || "{}");
+    penanda[surah] = nomorAyat;
+    localStorage.setItem("penanda", JSON.stringify(penanda));
+    tampilkanPenanda();
+
+    // Reset semua ikon
+    document.querySelectorAll("button[id^='mark-']").forEach(btn => {
+      const icon = btn.querySelector("i");
+      if (icon) {
+        icon.className = "far fa-bookmark";
+        icon.style.color = "#555";
+      }
     });
 
-    surahSelect.addEventListener("change", e => {
-      const nomor = e.target.value;
-      if (nomor) loadSurah(nomor);
-    });
+    // Set ikon aktif
+    const aktifBtn = document.getElementById(`mark-${nomorAyat}`);
+    if (aktifBtn) {
+      const icon = aktifBtn.querySelector("i");
+      if (icon) {
+        icon.className = "fas fa-bookmark";
+        icon.style.color = "#f59e0b";
+      }
+    }
+  }
 
-    // Muat default surah (Al-Fatihah)
-    loadSurah(1);
-  </script>
+  function toggleTafsir(i) {
+    const tafsirDiv = document.getElementById(`tafsir-${i}`);
+    const btn = document.getElementById(`btn-${i}`);
+
+    if (tafsirDiv.style.display === "none") {
+      tafsirDiv.style.display = "block";
+      btn.innerText = "➖ Sembunyikan Tafsir";
+    } else {
+      tafsirDiv.style.display = "none";
+      btn.innerText = "➕ Lihat Tafsir";
+    }
+  }
+
+  document.getElementById("search").addEventListener("input", e => {
+    const keyword = e.target.value.trim().toLowerCase();
+    if (!keyword || keyword.length < 2) {
+      tampilkanAyat(ayatList);
+      tampilkanPenanda();
+      return;
+    }
+
+    const hasilFilter = ayatList.filter(a =>
+      a.arti.toLowerCase().includes(keyword)
+    );
+    tampilkanAyat(hasilFilter);
+  });
+
+  surahSelect.addEventListener("change", e => {
+    const nomor = e.target.value;
+    if (nomor) loadSurah(nomor);
+  });
+
+
+  loadSurah(1);
+</script>
+
+
 </body>
 </html>
