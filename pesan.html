@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Sederhana WhatsApp Style</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: #ece5dd;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    #topBar {
+      padding: 10px;
+      background: #075e54;
+      color: white;
+    }
+
+    #searchContainer {
+      padding: 10px;
+      background: #f0f0f0;
+    }
+
+    #searchInput {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    #searchResults button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: none;
+      background: #ffffff;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    #searchResults button:hover {
+      background: #e0e0e0;
+    }
+
+    #chatBox {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      background: #f4f4f4;
+    }
+
+    #inputArea {
+      display: flex;
+      padding: 10px;
+      background: #ddd;
+    }
+
+    #messageInput {
+      flex: 1;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+    }
+
+    #sendBtn {
+      margin-left: 5px;
+      background: #128c7e;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 15px;
+      cursor: pointer;
+    }
+
+    .message {
+      max-width: 80%;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 7px;
+      word-wrap: break-word;
+    }
+
+    .mine {
+      background: #dcf8c6;
+      align-self: flex-end;
+    }
+
+    .theirs {
+      background: #ffffff;
+      align-self: flex-start;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="topBar">Ujicoba</div>
+
+  <div id="searchContainer">
+    <input type="text" id="searchInput" placeholder="Cari username..." oninput="filterUsers()" />
+    <div id="searchResults"></div>
+  </div>
+
+  <div id="chatBox"></div>
+
+  <div id="inputArea">
+    <input type="text" id="messageInput" placeholder="Ketik pesan..." />
+    <button id="sendBtn" onclick="sendMessage()">Kirim</button>
+  </div>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyAJ5I8k2MzAyDLt9fUcXHRNtRVjKB_ETLY",
+    authDomain: "projectid-81104.firebaseapp.com",
+    projectId: "projectid-81104",
+    storageBucket: "projectid-81104.appspot.com",
+    messagingSenderId: "554913260457",
+    appId: "1:554913260457:web:bf988867ebfd902c651ab8",
+    measurementId: "G-8WFHQW5WGN"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  let currentUser = null;
+  let receiverId = null;
+  let unsubscribe = null;
+  let allUsers = [];
+
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      currentUser = user;
+      loadAllUsers();
+    } else {
+      window.location.href = "login.html";
+    }
+  });
+
+  function loadAllUsers() {
+    db.collection('users').get().then(snapshot => {
+      allUsers = snapshot.docs
+        .filter(doc => doc.id !== currentUser.uid)
+        .map(doc => ({ id: doc.id, ...doc.data() }));
+    });
+  }
+
+  function filterUsers() {
+    const query = document.getElementById('searchInput').value.toLowerCase();
+    const resultBox = document.getElementById('searchResults');
+    resultBox.innerHTML = '';
+
+    const results = allUsers.filter(user =>
+      (user.username || '').toLowerCase().includes(query)
+    );
+
+    results.forEach(user => {
+      const btn = document.createElement('button');
+      btn.innerText = user.username || user.email || 'Tanpa Nama';
+      btn.onclick = () => {
+        receiverId = user.id;
+        loadChat();
+        document.getElementById('searchResults').innerHTML = '';
+        document.getElementById('searchInput').value = user.username;
+      };
+      resultBox.appendChild(btn);
+    });
+  }
+
+  function sendMessage() {
+    const text = document.getElementById('messageInput').value.trim();
+    if (!receiverId || !text) return;
+
+    const chatId = [currentUser.uid, receiverId].sort().join('_');
+    db.collection('chats').doc(chatId).collection('messages').add({
+      senderId: currentUser.uid,
+      receiverId: receiverId,
+      text: text,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    document.getElementById('messageInput').value = '';
+  }
+
+  function loadChat() {
+    const chatId = [currentUser.uid, receiverId].sort().join('_');
+    if (unsubscribe) unsubscribe();
+
+    unsubscribe = db.collection('chats').doc(chatId)
+      .collection('messages')
+      .orderBy('timestamp')
+      .onSnapshot(snapshot => {
+        const chatBox = document.getElementById('chatBox');
+        chatBox.innerHTML = '';
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const msg = document.createElement('div');
+          msg.className = 'message ' + (data.senderId === currentUser.uid ? 'mine' : 'theirs');
+          msg.textContent = data.text;
+          chatBox.appendChild(msg);
+        });
+        chatBox.scrollTop = chatBox.scrollHeight;
+      });
+  }
+</script>
+
+</body>
+</html>
