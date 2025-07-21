@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Chat Biru Modern</title>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
@@ -22,7 +22,8 @@
       display: flex;
       flex-direction: column;
       height: 100vh;
-      overflow: hidden;
+      /* biarkan scroll jika perlu */
+      overflow-y: auto;
     }
 
     #topBar {
@@ -32,12 +33,14 @@
       font-size: 18px;
       font-weight: 600;
       text-align: center;
+      flex-shrink: 0;
     }
 
     #searchContainer {
       padding: 10px;
       background: #ffffff;
       border-bottom: 1px solid #ccc;
+      flex-shrink: 0;
     }
 
     #searchInput {
@@ -65,6 +68,7 @@
       text-align: left;
       cursor: pointer;
       transition: background 0.2s;
+      font-size: 14px;
     }
 
     #searchResults button:hover {
@@ -78,6 +82,7 @@
       background: #e6f0fb;
       display: flex;
       flex-direction: column;
+      min-height: 0; /* penting untuk flex container agar scroll berfungsi */
     }
 
     .message {
@@ -88,6 +93,7 @@
       font-size: 14px;
       line-height: 1.5;
       word-wrap: break-word;
+      white-space: pre-wrap; /* supaya enter tetap terlihat */
     }
 
     .mine {
@@ -108,6 +114,10 @@
       padding: 10px;
       background: #ffffff;
       border-top: 1px solid #ccc;
+      position: sticky;
+      bottom: 0;
+      z-index: 10;
+      flex-shrink: 0;
     }
 
     #messageInput {
@@ -266,6 +276,15 @@
           chatBox.scrollTop = chatBox.scrollHeight;
         });
     }
+
+    // Auto scroll saat input fokus, untuk bantu di mobile
+    const messageInput = document.getElementById('messageInput');
+    messageInput.addEventListener('focus', () => {
+      setTimeout(() => {
+        const chatBox = document.getElementById('chatBox');
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 300);
+    });
   </script>
 </body>
 </html>
