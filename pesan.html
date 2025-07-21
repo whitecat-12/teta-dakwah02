@@ -161,6 +161,33 @@
       #messageInput {
         font-size: 13px;
       }
+	  tyle>
+  .message {
+    padding: 10px;
+    margin: 5px;
+    border-radius: 8px;
+    max-width: 80%;
+    position: relative;
+  }
+
+  .mine {
+    background-color: #dcf8c6;
+    align-self: flex-end;
+  }
+
+  .theirs {
+    background-color: #f1f0f0;
+    align-self: flex-start;
+  }
+
+  .delete-icon {
+    color: blue;
+    font-size: 14px;
+    position: relative;
+    top: 2px;
+  }
+
+	  
     }
   </style>
 </head>
@@ -257,34 +284,55 @@
     }
 
     function loadChat() {
-      const chatId = [currentUser.uid, receiverId].sort().join('_');
-      if (unsubscribe) unsubscribe();
+  const chatId = [currentUser.uid, receiverId].sort().join('_');
+  if (unsubscribe) unsubscribe();
 
-      unsubscribe = db.collection('chats').doc(chatId)
-        .collection('messages')
-        .orderBy('timestamp')
-        .onSnapshot(snapshot => {
-          const chatBox = document.getElementById('chatBox');
-          chatBox.innerHTML = '';
-          snapshot.forEach(doc => {
-            const data = doc.data();
-            const msg = document.createElement('div');
-            msg.className = 'message ' + (data.senderId === currentUser.uid ? 'mine' : 'theirs');
-            msg.textContent = data.text;
-            chatBox.appendChild(msg);
-          });
-          chatBox.scrollTop = chatBox.scrollHeight;
+  unsubscribe = db.collection('chats').doc(chatId)
+    .collection('messages')
+    .orderBy('timestamp')
+    .onSnapshot(snapshot => {
+      const chatBox = document.getElementById('chatBox');
+      chatBox.innerHTML = '';
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const msg = document.createElement('div');
+        msg.className = 'message ' + (data.senderId === currentUser.uid ? 'mine' : 'theirs');
+        msg.textContent = data.text;
+        msg.setAttribute('data-id', doc.id); // penting: simpan ID dokumen
+
+        // Buat tombol hapus (ikon sampah)
+        const deleteIcon = document.createElement('i');
+        deleteIcon.className = 'fas fa-trash delete-icon';
+        deleteIcon.style.display = 'none'; // awalnya tersembunyi
+        deleteIcon.style.marginLeft = '10px';
+        deleteIcon.style.cursor = 'pointer';
+
+        // Saat ikon diklik, hapus pesan
+        deleteIcon.addEventListener('click', (e) => {
+          e.stopPropagation(); // cegah pemicu klik parent
+          const messageId = msg.getAttribute('data-id');
+          db.collection('chats').doc(chatId)
+            .collection('messages').doc(messageId)
+            .delete();
         });
-    }
 
-    // Auto scroll saat input fokus, untuk bantu di mobile
-    const messageInput = document.getElementById('messageInput');
-    messageInput.addEventListener('focus', () => {
-      setTimeout(() => {
-        const chatBox = document.getElementById('chatBox');
-        chatBox.scrollTop = chatBox.scrollHeight;
-      }, 300);
+        // Tambahkan ikon ke pesan
+        msg.appendChild(deleteIcon);
+
+        // Saat pesan diklik, tampilkan ikon hapus
+        msg.addEventListener('click', () => {
+          const alreadyVisible = deleteIcon.style.display === 'inline';
+          // Sembunyikan ikon di semua pesan lain
+          document.querySelectorAll('.delete-icon').forEach(icon => icon.style.display = 'none');
+          deleteIcon.style.display = alreadyVisible ? 'none' : 'inline';
+        });
+
+        chatBox.appendChild(msg);
+      });
+      chatBox.scrollTop = chatBox.scrollHeight;
     });
+}
+
   </script>
 </body>
 </html>
