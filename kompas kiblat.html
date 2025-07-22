@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Little Muslim - Aplikasi Belajar Anak Islami</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --primary: #38b2ac;
+      --secondary: #0e7490;
+      --accent: #f59e0b;
+      --quran: #10b981;
+      --fiqh: #3b82f6;
+      --hadith: #8b5cf6;
+      --islamic: #ec4899;
+    }
+
+    body {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #3b82f6 100%);
+  font-family: "Baloo 2", cursive;
+  padding-bottom: 5.5rem;
+}
+
+
+    .app-container {
+      max-width: 414px;
+      margin: 0 auto;
+      background: white;
+      min-height: 100vh;
+      position: relative;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-width: 414px;
+      margin: 0 auto;
+      background: white;
+      border-top: 1px solid #e5e7eb; /* tailwind gray-200 */
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      z-index: 50;
+      padding: 0.5rem 1rem;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      font-size: 0.75rem; /* ~ text-xs */
+    }
+
+    .nav-icon {
+      transition: all 0.3s ease;
+      color: #6b7280; /* gray-500 */
+    }
+
+    .nav-icon.active,
+    .bottom-nav a:hover .nav-icon {
+      transform: translateY(-6px);
+      color: var(--primary);
+    }
+
+    .bottom-nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+      gap: 0.25rem;
+    }
+
+    @keyframes pulse {
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.08);
+        opacity: 0.6;
+      }
+    }
+
+    .compass-container {
+      perspective: 1000px;
+    }
+
+    .compass {
+      transition: transform 0.5s ease-out;
+      transform-style: preserve-3d;
+    }
+
+    .qibla-indicator {
+      animation: pulse 2s infinite;
+    }
+
+    .gradient-bg {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #3b82f6 100%);
+    }
+
+    .compass-ring {
+      box-shadow: 0 0 30px rgba(59, 130, 246, 0.5),
+        inset 0 0 10px rgba(255, 255, 255, 0.05);
+    }
+
+    .location-info {
+      backdrop-filter: blur(15px);
+      background-color: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    button {
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(255, 255, 255, 0.15);
+    }
+
+    .modal-style {
+      backdrop-filter: blur(15px);
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .glow-border {
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+    }
+  </style>
+</head>
+
+<body>
+  <div
+    class="gradient-bg min-h-screen flex flex-col items-center justify-center p-4 text-white font-sans"
+  >
+    <!-- Heading -->
+    <div class="text-center mb-8">
+      <h1
+        class="text-4xl font-extrabold mb-2 tracking-wide flex items-center justify-center gap-2"
+      >
+        <i class="fas fa-compass text-white"></i> Kompas Kiblat
+      </h1>
+      <p class="opacity-80 text-lg">Temukan arah menuju Ka'bah di Makkah</p>
+    </div>
+
+    <!-- Compass Card -->
+    <div
+      class="bg-white/5 backdrop-blur-sm rounded-2xl shadow-xl p-6 w-full max-w-md mb-8"
+    >
+      <div
+        class="compass-container relative w-64 h-64 mx-auto mb-6"
+      >
+        <div class="compass w-full h-full relative">
+          <!-- Outer Ring -->
+          <div
+            class="compass-ring absolute w-full h-full rounded-full border-4 border-white/20 flex items-center justify-center"
+          >
+            <div class="absolute w-3 h-3 rounded-full bg-red-500 qibla-indicator"></div>
+
+            <!-- Directions -->
+            <div
+              class="absolute top-0 left-1/2 transform -translate-x-1/2 text-xs font-bold"
+            >
+              N
+            </div>
+            <div
+              class="absolute right-0 top-1/2 transform -translate-y-1/2 text-xs font-bold"
+            >
+              E
+            </div>
+            <div
+              class="absolute bottom-0 left-1/2 transform -translate-x-1/2 text-xs font-bold"
+            >
+              S
+            </div>
+            <div
+              class="absolute left-0 top-1/2 transform -translate-y-1/2 text-xs font-bold"
+            >
+              W
+            </div>
+
+            <!-- Inner Rings -->
+            <div
+              class="w-3/4 h-3/4 rounded-full border-2 border-white/10 flex items-center justify-center"
+            >
+              <div
+                class="w-1/2 h-1/2 rounded-full bg-white/5 flex items-center justify-center"
+              >
+                <div class="w-4 h-4 rounded-full bg-red-500"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Needle -->
+          <div
+            class="absolute top-1/2 left-1/2 w-1/2 h-1 transform -translate-y-1/2 origin-left"
+          >
+            <div class="absolute w-full h-full bg-white rounded-full"></div>
+            <div
+              class="absolute w-4 h-4 -right-2 -top-1.5 rounded-full bg-red-500"
+            ></div>
+          </div>
+
+          <!-- Qibla Direction -->
+          <div
+            class="absolute top-1/2 left-1/2 w-1/2 h-2 transform origin-left pointer-events-none"
+          >
+            <div
+              class="absolute w-full h-full bg-yellow-400 rounded-full opacity-80"
+            ></div>
+            <div
+              class="absolute -right-2 -top-1 w-4 h-4 rounded-full bg-yellow-400"
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Location Info -->
+      <div class="location-info rounded-lg p-4 text-sm space-y-4">
+        <div class="flex flex-col sm:flex-row sm:justify-between gap-4">
+          <!-- Lokasi -->
+          <div class="flex items-start gap-3">
+            <i class="fas fa-map-marker-alt text-white/80 text-lg mt-1"></i>
+            <div>
+              <h3 class="font-semibold text-base">Lokasi Anda</h3>
+              <p id="location" class="opacity-80">Menunggu GPS...</p>
+            </div>
+          </div>
+          <!-- Arah Kiblat -->
+          <div class="flex items-start gap-3 text-right sm:text-left">
+            <i class="fas fa-location-arrow text-white/80 text-lg mt-1"></i>
+            <div>
+              <h3 class="font-semibold text-base">Arah Kiblat</h3>
+              <p id="qibla-direction" class="opacity-80">-</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Koordinat dan Heading -->
+        <div class="flex flex-col sm:flex-row sm:justify-between gap-4">
+          <div class="flex items-center gap-2">
+            <i class="fas fa-map-pin text-white/80"></i>
+            <span id="latitude">0° N</span>, <span id="longitude">0° E</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i class="fas fa-compass text-white/80"></i>
+            <span id="heading">0°</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex flex-col sm:flex-row gap-4 w-full max-w-md mb-8">
+      <button
+        id="calibrate-btn"
+        class="flex-1 bg-white/10 hover:bg-white/20 transition py-3 px-4 rounded-xl shadow-md text-sm font-medium flex items-center justify-center gap-2"
+      >
+        <i class="fas fa-sync-alt"></i> Kalibrasi
+      </button>
+      <button
+        id="help-btn"
+        class="flex-1 bg-white/10 hover:bg-white/20 transition py-3 px-4 rounded-xl shadow-md text-sm font-medium flex items-center justify-center gap-2"
+      >
+        <i class="fas fa-question-circle"></i> Bantuan
+      </button>
+    </div>
+    <div class="w-full max-w-md mb-8">
+      <a
+        href="map kabah.html"
+        target="_blank"
+        class="w-full block text-center bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded-xl shadow-md font-semibold transition duration-300"
+      >
+        <i class="fas fa-map-marked-alt mr-2"></i> Lihat Peta Lokasi & Kiblat
+      </a>
+    </div>
+
+    <!-- Help Modal -->
+    <div
+      id="help-modal"
+      class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50 hidden"
+    >
+      <div
+        class="bg-white text-gray-800 rounded-xl max-w-md w-full p-6 shadow-2xl"
+      >
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="font-bold text-xl flex items-center gap-2">
+            <i class="fas fa-book"></i> Cara Menggunakan
+          </h3>
+          <button
+            id="close-help"
+            class="text-gray-500 hover:text-gray-700 text-xl"
+          >
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="space-y-3 text-sm">
+          <p>
+            <i class="fas fa-info-circle text-blue-500 mr-2"></i> Pegang perangkat
+            secara datar.
+          </p>
+          <p>
+            <i class="fas fa-location-arrow text-blue-500 mr-2"></i> Jarum merah =
+            arah utara.
+          </p>
+          <p>
+            <i class="fas fa-mosque text-blue-500 mr-2"></i> Garis kuning = arah
+            kiblat.
+          </p>
+          <p>
+            <i class="fas fa-sync-alt text-blue-500 mr-2"></i> Gunakan kalibrasi jika
+            arah tidak akurat.
+          </p>
+          <p class="text-xs text-gray-600 mt-4">
+            Disarankan di area terbuka, bebas gangguan magnetik.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Calibration Modal -->
+    <div
+      id="calibration-modal"
+      class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50 hidden"
+    >
+      <div
+        class="bg-white text-gray-800 rounded-xl max-w-md w-full p-6 shadow-2xl text-center"
+      >
+        <div class="mb-4">
+          <i class="fas fa-compass text-4xl text-blue-500 mb-3"></i>
+          <h3 class="font-bold text-xl mb-2">Kalibrasi Kompas</h3>
+          <p class="text-sm">Gerakkan perangkat membentuk angka 8 untuk kalibrasi.</p>
+        </div>
+        <div
+          class="w-full h-3 bg-gray-200 rounded-full overflow-hidden mb-4"
+        >
+          <div
+            id="calibration-progress"
+            class="bg-blue-600 h-full transition-all duration-300"
+            style="width: 0%"
+          ></div>
+        </div>
+        <button
+          id="cancel-calibration"
+          class="text-blue-500 hover:text-blue-700 font-medium text-sm"
+        >
+          Batal
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav" role="navigation" aria-label="Navigasi utama">
+    <a href="index.html" aria-current="page" class="flex flex-col items-center">
+      <i class="fas fa-home nav-icon text-xl active"></i>
+      <span class="text-xs mt-1">Beranda</span>
+    </a>
+    <a href="video.html" class="flex flex-col items-center">
+      <i class="fas fa-video nav-icon text-xl"></i>
+      <span class="text-xs mt-1">Video</span>
+    </a>
+    <a href="kategori materi.html" class="flex flex-col items-center">
+      <i class="fas fa-quran nav-icon text-xl"></i>
+      <span class="text-xs mt-1">Materi Harian</span>
+    </a>
+    <a href="kategori soal.html" class="flex flex-col items-center">
+      <i class="fas fa-book-open nav-icon text-xl"></i>
+      <span class="text-xs mt-1">Soal Harian</span>
+    </a>
+    <a href="profil.html" class="flex flex-col items-center">
+      <i class="fas fa-user nav-icon text-xl"></i>
+      <span class="text-xs mt-1">Profil</span>
+    </a>
+  </nav>
+</body>
+
+
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+    // Bottom navigation interaction
+    const navItems = document.querySelectorAll('.nav-icon');
+    navItems.forEach(item => {
+        item.addEventListener('click', function () {
+            navItems.forEach(nav => {
+                nav.classList.remove('active');
+                nav.parentElement.classList.remove('text-primary');
+                nav.parentElement.classList.add('text-gray-500');
+            });
+            this.classList.add('active');
+            this.parentElement.classList.add('text-primary');
+            this.parentElement.classList.remove('text-gray-500');
+        });
+    });
+
+    // Card hover effect
+    const cards = document.querySelectorAll('.card-hover');
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            card.classList.add('shadow-md');
+            card.classList.remove('shadow-sm');
+        });
+        card.addEventListener('mouseleave', () => {
+            card.classList.remove('shadow-md');
+            card.classList.add('shadow-sm');
+        });
+    });
+});
+
+// Constants
+const KAABA_LAT = 21.3891;
+const KAABA_LONG = 39.8579;
+
+// Variables
+let currentLat = 0;
+let currentLong = 0;
+let currentHeading = 0;
+let qiblaDirection = 0;
+
+// DOM Elements
+const compassElement = document.querySelector('.compass');
+const qiblaIndicator = document.querySelector('.compass-ring .qibla-indicator');
+const qiblaArrow = document.querySelector('.compass-container .origin-left:nth-child(3)');
+
+const locationElement = document.getElementById('location');
+const qiblaDirectionElement = document.getElementById('qibla-direction');
+const latitudeElement = document.getElementById('latitude');
+const longitudeElement = document.getElementById('longitude');
+const headingElement = document.getElementById('heading');
+
+const calibrateBtn = document.getElementById('calibrate-btn');
+const helpBtn = document.getElementById('help-btn');
+const helpModal = document.getElementById('help-modal');
+const closeHelp = document.getElementById('close-help');
+const calibrationModal = document.getElementById('calibration-modal');
+const cancelCalibration = document.getElementById('cancel-calibration');
+const calibrationProgress = document.getElementById('calibration-progress');
+
+// Qibla direction calculation
+function calculateQiblaDirection(lat, long) {
+    const phiK = KAABA_LAT * Math.PI / 180;
+    const lambdaK = KAABA_LONG * Math.PI / 180;
+    const phi = lat * Math.PI / 180;
+    const lambda = long * Math.PI / 180;
+
+    const psi = 180 / Math.PI * Math.atan2(
+        Math.sin(lambdaK - lambda),
+        Math.cos(phi) * Math.tan(phiK) - Math.sin(phi) * Math.cos(lambdaK - lambda)
+    );
+
+    return (psi + 360) % 360;
+}
+
+// Compass display update
+function updateCompass() {
+    compassElement.style.transform = `rotate(${-currentHeading}deg)`;
+
+    const qiblaAngle = (qiblaDirection - currentHeading + 360) % 360;
+    const radians = qiblaAngle * Math.PI / 180;
+    const radius = 120;
+
+    const x = radius * Math.sin(radians);
+    const y = -radius * Math.cos(radians);
+
+    qiblaIndicator.style.transform = `translate(${x}px, ${y}px)`;
+    qiblaArrow.style.transform = `rotate(${qiblaAngle}deg)`;
+
+    qiblaDirectionElement.textContent = `${Math.round(qiblaDirection)}° from North`;
+
+    // Cardinal direction
+    let cardinal = '';
+    if (qiblaAngle >= 337.5 || qiblaAngle < 22.5) cardinal = 'North';
+    else if (qiblaAngle < 67.5) cardinal = 'Northeast';
+    else if (qiblaAngle < 112.5) cardinal = 'East';
+    else if (qiblaAngle < 157.5) cardinal = 'Southeast';
+    else if (qiblaAngle < 202.5) cardinal = 'South';
+    else if (qiblaAngle < 247.5) cardinal = 'Southwest';
+    else if (qiblaAngle < 292.5) cardinal = 'West';
+    else cardinal = 'Northwest';
+
+    qiblaDirectionElement.textContent += ` (${cardinal})`;
+}
+
+// Get user location
+function getLocation() {
+    if (!navigator.geolocation) {
+        locationElement.textContent = "Geolocation is not supported by this browser.";
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+        position => {
+            currentLat = position.coords.latitude;
+            currentLong = position.coords.longitude;
+
+            const latDir = currentLat >= 0 ? 'N' : 'S';
+            const longDir = currentLong >= 0 ? 'E' : 'W';
+
+            latitudeElement.textContent = `${Math.abs(currentLat.toFixed(4))}° ${latDir}`;
+            longitudeElement.textContent = `${Math.abs(currentLong.toFixed(4))}° ${longDir}`;
+            locationElement.textContent = `Lat: ${currentLat.toFixed(4)}, Long: ${currentLong.toFixed(4)}`;
+
+            qiblaDirection = calculateQiblaDirection(currentLat, currentLong);
+            updateCompass();
+        },
+        error => {
+            console.error("Error getting location:", error);
+            locationElement.textContent = "Location access denied. Using default values.";
+
+            currentLat = -6.2088;
+            currentLong = 106.8456;
+            qiblaDirection = calculateQiblaDirection(currentLat, currentLong);
+            updateCompass();
+        }
+    );
+}
+
+// Handle orientation
+function handleOrientation(event) {
+    if (event.absolute && event.alpha !== null) {
+        currentHeading = event.alpha;
+        headingElement.textContent = `${Math.round(currentHeading)}°`;
+        updateCompass();
+    }
+}
+
+// Calibration simulation
+function startCalibration() {
+    calibrationModal.classList.remove('hidden');
+    let progress = 0;
+
+    const calibrationInterval = setInterval(() => {
+        progress += 5;
+        calibrationProgress.style.width = `${progress}%`;
+
+        if (progress >= 100) {
+            clearInterval(calibrationInterval);
+            calibrationModal.classList.add('hidden');
+
+            const originalText = calibrateBtn.innerHTML;
+            calibrateBtn.innerHTML = '<i class="fas fa-check-circle mr-2"></i> Calibrated';
+            calibrateBtn.classList.add('bg-green-500/20');
+
+            setTimeout(() => {
+                calibrateBtn.innerHTML = originalText;
+                calibrateBtn.classList.remove('bg-green-500/20');
+            }, 2000);
+        }
+    }, 100);
+}
+
+// Event listeners
+calibrateBtn.addEventListener('click', startCalibration);
+helpBtn.addEventListener('click', () => helpModal.classList.remove('hidden'));
+closeHelp.addEventListener('click', () => helpModal.classList.add('hidden'));
+cancelCalibration.addEventListener('click', () => {
+    calibrationModal.classList.add('hidden');
+    calibrationProgress.style.width = '0%';
+});
+
+// Initialization
+getLocation();
+
+// Device orientation support
+if (window.DeviceOrientationEvent) {
+    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+        calibrateBtn.addEventListener('click', () => {
+            DeviceOrientationEvent.requestPermission()
+                .then(response => {
+                    if (response === 'granted') {
+                        window.addEventListener('deviceorientation', handleOrientation);
+                    }
+                })
+                .catch(console.error);
+        });
+    } else {
+        window.addEventListener('deviceorientation', handleOrientation);
+    }
+} else {
+    alert("Device orientation not supported. Qibla direction will be shown but compass won't move.");
+}
+
+// Fallback simulation for desktop
+if (!window.DeviceOrientationEvent) {
+    let simulatedHeading = 0;
+    setInterval(() => {
+        simulatedHeading = (simulatedHeading + 1) % 360;
+        currentHeading = simulatedHeading;
+        headingElement.textContent = `${Math.round(currentHeading)}°`;
+        updateCompass();
+    }, 100);
+}
+
+    </script>
+</body>
+</html>
