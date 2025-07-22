@@ -135,9 +135,10 @@
     }
   </style>
 </head>
+
 <body>
   <div
-    class="gradient-bg min-h-screen flex flex-col items-center justify-center p-4 pb-24 text-white font-sans"
+    class="gradient-bg min-h-screen flex flex-col items-center justify-center p-4 text-white font-sans pb-24"
   >
     <!-- Heading -->
     <div class="text-center mb-8">
@@ -153,8 +154,105 @@
     <div
       class="bg-white/5 backdrop-blur-sm rounded-2xl shadow-xl p-6 w-full max-w-md mb-8"
     >
-      <!-- isi kompas -->
-      <!-- ... (tidak diubah) -->
+      <div class="compass-container relative w-64 h-64 mx-auto mb-6">
+        <div class="compass w-full h-full relative">
+          <!-- Outer Ring -->
+          <div
+            class="compass-ring absolute w-full h-full rounded-full border-4 border-white/20 flex items-center justify-center"
+          >
+            <div class="absolute w-3 h-3 rounded-full bg-red-500 qibla-indicator"></div>
+
+            <!-- Directions -->
+            <div
+              class="absolute top-0 left-1/2 transform -translate-x-1/2 text-xs font-bold"
+            >
+              N
+            </div>
+            <div
+              class="absolute right-0 top-1/2 transform -translate-y-1/2 text-xs font-bold"
+            >
+              E
+            </div>
+            <div
+              class="absolute bottom-0 left-1/2 transform -translate-x-1/2 text-xs font-bold"
+            >
+              S
+            </div>
+            <div
+              class="absolute left-0 top-1/2 transform -translate-y-1/2 text-xs font-bold"
+            >
+              W
+            </div>
+
+            <!-- Inner Rings -->
+            <div
+              class="w-3/4 h-3/4 rounded-full border-2 border-white/10 flex items-center justify-center"
+            >
+              <div
+                class="w-1/2 h-1/2 rounded-full bg-white/5 flex items-center justify-center"
+              >
+                <div class="w-4 h-4 rounded-full bg-red-500"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Needle -->
+          <div
+            class="absolute top-1/2 left-1/2 w-1/2 h-1 transform -translate-y-1/2 origin-left"
+          >
+            <div class="absolute w-full h-full bg-white rounded-full"></div>
+            <div
+              class="absolute w-4 h-4 -right-2 -top-1.5 rounded-full bg-red-500"
+            ></div>
+          </div>
+
+          <!-- Qibla Direction -->
+          <div
+            class="absolute top-1/2 left-1/2 w-1/2 h-2 transform origin-left pointer-events-none"
+          >
+            <div
+              class="absolute w-full h-full bg-yellow-400 rounded-full opacity-80"
+            ></div>
+            <div
+              class="absolute -right-2 -top-1 w-4 h-4 rounded-full bg-yellow-400"
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Location Info -->
+      <div class="location-info rounded-lg p-4 text-sm space-y-4">
+        <div class="flex flex-col sm:flex-row sm:justify-between gap-4">
+          <!-- Lokasi -->
+          <div class="flex items-start gap-3">
+            <i class="fas fa-map-marker-alt text-white/80 text-lg mt-1"></i>
+            <div>
+              <h3 class="font-semibold text-base">Lokasi Anda</h3>
+              <p id="location" class="opacity-80">Menunggu GPS...</p>
+            </div>
+          </div>
+          <!-- Arah Kiblat -->
+          <div class="flex items-start gap-3 text-right sm:text-left">
+            <i class="fas fa-location-arrow text-white/80 text-lg mt-1"></i>
+            <div>
+              <h3 class="font-semibold text-base">Arah Kiblat</h3>
+              <p id="qibla-direction" class="opacity-80">-</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Koordinat dan Heading -->
+        <div class="flex flex-col sm:flex-row sm:justify-between gap-4">
+          <div class="flex items-center gap-2">
+            <i class="fas fa-map-pin text-white/80"></i>
+            <span id="latitude">0° N</span>, <span id="longitude">0° E</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i class="fas fa-compass text-white/80"></i>
+            <span id="heading">0°</span>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Buttons -->
@@ -173,23 +271,94 @@
       </button>
     </div>
 
-    <!-- ✅ Tombol sudah aman dan bisa diklik -->
-    <div class="w-full max-w-md mb-8 relative z-10">
+    <!-- Tombol Peta -->
+    <div class="w-full max-w-md mb-8">
       <a
-        href="map kabah.html"
-        target="_blank"
-        class="w-full block text-center bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded-xl shadow-md font-semibold transition duration-300"
-      >
-        <i class="fas fa-map-marked-alt mr-2"></i> Lihat Peta Lokasi & Kiblat
-      </a>
+  href="map kabah.html"
+  class="w-full block text-center bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded-xl shadow-md font-semibold transition duration-300"
+>
+  <i class="fas fa-map-marked-alt mr-2"></i> Lihat Peta Lokasi & Kiblat
+</a>
+
     </div>
 
     <!-- Help Modal -->
-    <!-- ... (tidak diubah) -->
+    <div
+      id="help-modal"
+      class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50 hidden"
+    >
+      <div
+        class="bg-white text-gray-800 rounded-xl max-w-md w-full p-6 shadow-2xl"
+      >
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="font-bold text-xl flex items-center gap-2">
+            <i class="fas fa-book"></i> Cara Menggunakan
+          </h3>
+          <button
+            id="close-help"
+            class="text-gray-500 hover:text-gray-700 text-xl"
+          >
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="space-y-3 text-sm">
+          <p>
+            <i class="fas fa-info-circle text-blue-500 mr-2"></i> Pegang perangkat
+            secara datar.
+          </p>
+          <p>
+            <i class="fas fa-location-arrow text-blue-500 mr-2"></i> Jarum merah =
+            arah utara.
+          </p>
+          <p>
+            <i class="fas fa-mosque text-blue-500 mr-2"></i> Garis kuning = arah
+            kiblat.
+          </p>
+          <p>
+            <i class="fas fa-sync-alt text-blue-500 mr-2"></i> Gunakan kalibrasi jika
+            arah tidak akurat.
+          </p>
+          <p class="text-xs text-gray-600 mt-4">
+            Disarankan di area terbuka, bebas gangguan magnetik.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Calibration Modal -->
+    <div
+      id="calibration-modal"
+      class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50 hidden"
+    >
+      <div
+        class="bg-white text-gray-800 rounded-xl max-w-md w-full p-6 shadow-2xl text-center"
+      >
+        <div class="mb-4">
+          <i class="fas fa-compass text-4xl text-blue-500 mb-3"></i>
+          <h3 class="font-bold text-xl mb-2">Kalibrasi Kompas</h3>
+          <p class="text-sm">Gerakkan perangkat membentuk angka 8 untuk kalibrasi.</p>
+        </div>
+        <div
+          class="w-full h-3 bg-gray-200 rounded-full overflow-hidden mb-4"
+        >
+          <div
+            id="calibration-progress"
+            class="bg-blue-600 h-full transition-all duration-300"
+            style="width: 0%"
+          ></div>
+        </div>
+        <button
+          id="cancel-calibration"
+          class="text-blue-500 hover:text-blue-700 font-medium text-sm"
+        >
+          Batal
+        </button>
+      </div>
+    </div>
   </div>
 
-  <!-- ✅ Bottom Navigation -->
-  <nav class="bottom-nav fixed bottom-0 left-0 right-0 bg-white p-2 flex justify-around items-center max-w-md mx-auto z-50 border-t border-gray-200 shadow-md">
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav bg-white p-2 flex justify-around items-center">
     <a href="index.html" class="flex flex-col items-center text-gray-500">
       <i class="fas fa-home nav-icon text-xl active"></i>
       <span class="text-xs mt-1">Beranda</span>
@@ -212,7 +381,6 @@
     </a>
   </nav>
 </body>
-
 
 
     <script>
